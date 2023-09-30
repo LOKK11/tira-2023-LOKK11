@@ -8,19 +8,22 @@ public class Algorithms {
       // nada
    }
 
+   public static <T> void swap(T[] array, int first, int second) {
+      T temp = null;
+      temp = array[first];
+      array[first] = array[second];
+      array[second] = temp;
+   }
+
    ///////////////////////////////////////////
    // Insertion Sort for the whole array
    ///////////////////////////////////////////
 
    public static <T extends Comparable<T>> void insertionSort(T[] array) {
-      // TODO: Student, implement this.
-      T temp = null; 
       for (int i = 0; i < array.length - 1; i++) {
          for (int j = i + 1; j < array.length; j++) {
             if (array[i].compareTo(array[j]) > 0) {
-               temp = array[i];
-               array[i] = array[j];
-               array[j] = temp;
+               swap(array, i, j);
             }
          }
       }
@@ -30,15 +33,11 @@ public class Algorithms {
    // Insertion Sort for a slice of the array
    ///////////////////////////////////////////
 
-   public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) {
-      // TODO: Student, implement this.
-      T temp = null; 
+   public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) { 
       for (int i = fromIndex; i < toIndex - 1; i++) {
          for (int j = i + 1; j < toIndex; j++) {
             if (array[i].compareTo(array[j]) > 0) {
-               temp = array[i];
-               array[i] = array[j];
-               array[j] = temp;
+               swap(array, i, j);
             }
          }
       }
@@ -66,6 +65,17 @@ public class Algorithms {
 
    public static <T> void reverse(T[] array) {
       // TODO: Student, implement this.
+      int i = 0;
+      int j = array.length -1;
+      while (true) {
+         if (i < j) {
+            swap(array, i, j);
+            i++;
+            j--;
+         } else {
+            break;
+         }
+      }
    }
 
    ///////////////////////////////////////////
@@ -74,6 +84,17 @@ public class Algorithms {
 
    public static <T> void reverse(T[] array, int fromIndex, int toIndex) {
       // TODO: Student, implement this.
+      int i = fromIndex;
+      int j = toIndex -1;
+      while (true) {
+         if (i < j) {
+            swap(array, i, j);
+            i++;
+            j--;
+         } else {
+            break;
+         }
+      }
    }
 
 
