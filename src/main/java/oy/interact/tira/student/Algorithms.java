@@ -46,7 +46,7 @@ public class Algorithms {
    //////////////////////////////////////////////////////////
 
    public static <T> void insertionSort(T[] array, Comparator<T> comparator) {
-      // TODO: Student, implement this.
+      insertionSort(array, 0, array.length, comparator);
    }
 
    ////////////////////////////////////////////////////////////
@@ -54,7 +54,16 @@ public class Algorithms {
    ////////////////////////////////////////////////////////////
 
    public static <T> void insertionSort(T[] array, int fromIndex, int toIndex, Comparator<T> comparator) {
-      // TODO: Student, implement this.
+      for (int i = fromIndex + 1; i < toIndex; i++) {
+          T k = array[i];
+          int j = i - 1;
+  
+          while (j >= fromIndex && comparator.compare(array[j], k) > 0) {
+              array[j + 1] = array[j];
+              j--;
+          }
+          array[j + 1] = k;
+         }
    }
 
    ///////////////////////////////////////////
@@ -62,7 +71,6 @@ public class Algorithms {
    ///////////////////////////////////////////
 
    public static <T> void reverse(T[] array) {
-      // TODO: Student, implement this.
       int i = 0;
       int j = array.length -1;
       while (true) {
