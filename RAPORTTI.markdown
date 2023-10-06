@@ -38,6 +38,14 @@ Alaluvut jokaisen tehtävän raportille löydät alta.
 
 ## 01-TASK
 
+Tehtävän tekemisessä opin/kertasin, miten javalla iteroidaan taulukoiden läpi ja miten niitä järjestellään ilman ArrayList:ia.
+
+Toteuttamani lajittelualgoritmin aikakompleksisuusluokka on O(n^2).
+
+Toteuttamani reverse-algoritmin aikakompleksisuusluokka on O(n).
+
+Kannattaa kääntää sen järjestys, koska kääntämisalgoritmin aikakompleksisuusluokka on lineaarinen n ja lajittelualgoritmin eksponentiaalinen n^2. Tällä on suuri merkitys erityisesti suuria taulukoita lajitellessa.
+
 ## 02-TASK
 
 ## 03-TASK

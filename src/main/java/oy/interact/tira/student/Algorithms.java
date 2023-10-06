@@ -9,6 +9,7 @@ public class Algorithms {
    }
 
    public static <T> void swap(T[] array, int first, int second) {
+      //This function swaps the places of 2 values in an array.
       T temp = null;
       temp = array[first];
       array[first] = array[second];
@@ -20,13 +21,7 @@ public class Algorithms {
    ///////////////////////////////////////////
 
    public static <T extends Comparable<T>> void insertionSort(T[] array) {
-      for (int i = 0; i < array.length - 1; i++) {
-         for (int j = i + 1; j < array.length; j++) {
-            if (array[i].compareTo(array[j]) > 0) {
-               swap(array, i, j);
-            }
-         }
-      }
+      insertionSort(array, 0, array.length);
    }
 
    ///////////////////////////////////////////
