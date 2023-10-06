@@ -28,15 +28,18 @@ public class Algorithms {
    // Insertion Sort for a slice of the array
    ///////////////////////////////////////////
 
-   public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) { 
-      for (int i = fromIndex; i < toIndex - 1; i++) {
-         for (int j = i + 1; j < toIndex; j++) {
-            if (array[i].compareTo(array[j]) > 0) {
-               swap(array, i, j);
-            }
-         }
+   public static <T extends Comparable<T>> void insertionSort(T[] array, int fromIndex, int toIndex) {
+      for (int i = fromIndex + 1; i < toIndex; i++) {
+          T k = array[i];
+          int j = i - 1;
+  
+          while (j >= fromIndex && array[j].compareTo(k) > 0) {
+              array[j + 1] = array[j];
+              j--;
+          }
+          array[j + 1] = k;
       }
-   }
+  }
 
    //////////////////////////////////////////////////////////
    // Insertion Sort for the whole array using a Comparator
