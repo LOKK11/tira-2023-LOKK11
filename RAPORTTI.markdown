@@ -48,6 +48,88 @@ Kannattaa kääntää sen järjestys, koska kääntämisalgoritmin aikakompleksi
 
 ## 02-TASK
 
+Suoritin askeleen 3 testin 2 kertaa. Vasemmalla kuvassa on ensimmäisen testin tulokset fill ja search aikojen suhteista n kokoon. Oikealla on otettu kahden testin keskiarvot jokaiselle arvolle ja asetettu ne taulukkon n kanssa.
+![Taulukko](taulukko_task2.png)
+Toisen testin tulokset
+```
+n		Fill	Search	Total
+500		25		1415	1440
+1000	21		404		425
+1500	11		491		502
+2000	14		659		673
+2500	24		704		728
+3000	31		353		384
+3500	35		630		665
+4000	48		216		264
+4500	61		659		720
+5000	73		141		214
+5500	90		272		362
+6000	104		374		478
+6500	122		318		440
+7000	141		324		465
+7500	175		1468	1643
+8000	193		393		586
+8500	209		416		625
+9000	237		414		651
+9500	263		477		740
+10000	297		469		766
+10500	359		547		906
+11000	411		476		887
+11500	399		569		968
+12000	453		1065	1518
+12500	586		632		1218
+13000	654		611		1265
+13500	672		665		1337
+14000	611		604		1215
+14500	669		664		1333
+15000	789		853		1642
+15500	635		426		1061
+16000	837		783		1620
+16500	903		903		1806
+17000	968		837		1805
+17500	1091	929		2020
+18000	1383	881		2264
+18500	1374	922		2296
+19000	1479	932		2411
+19500	1512	1015	2527
+20000	1494	1055	2549
+20500	1582	1250	2832
+21000	1754	1807	3561
+21500	1799	2627	4426
+22000	1911	1226	3137
+22500	2178	1287	3465
+23000	2374	1312	3686
+23500	1400	673		2073
+24000	2540	2232	4772
+24500	2566	2717	5283
+25000	2847	1661	4508
+25500	3026	1915	4941
+26000	3101	3227	6328
+26500	3386	1644	5030
+27000	3536	3151	6687
+27500	3677	3091	6768
+28000	3868	1871	5739
+28500	4143	1936	6079
+29000	4259	3278	7537
+29500	2834	1278	4112
+30000	4738	2350	7088
+30500	4907	2265	7172
+31000	5176	3515	8691
+31500	6177	4425	10602
+32000	6293	2682	8975
+```
+Käyristä näyttäisi, että molempien aikojen kasvavan eksponentiaalisesti n kasvaessa. SimpleContainen.add -algoritmi ei sisällä sisäkkäisiä looppeja, vaan pelkkiä yksittäisiä looppeja, joten sen aikakompleksisuusluokka on O(n). Mutta, kun add-algoritmia kutsutaan toisesta loopista LinearFindTest.fillContainer:ssa n kertaa on koko lisäyksen aikakompleksisuusluokka O(n^2). Siksi kulunut aika kasvaa eksponentiaalisesti.
+Totetuttamani hakualgoritmit sisältävät kaikki vain yhden for loopin, joten niiden kaikkien aikakompleksisuusluokka on O(n). Myös hakualgoritmeja kutsutaan testissä ulommasta loopista, joten koko haun aikakompleksisuusluokka on myös O(n^2). Siksi myös se vaikuttaisi kasvavan eksponentiaalisesti.
+
+Tehtävää tehdessä muistui mieleen Javan luokkien ja rajapintojen toiminta. Vaikeaa oli juuri käytännön toteutus, kun Javan syntaksi ei ole hyvin muistissa. Helppoa oli itse koodin kirjoittaminen. For silmukat oli helppo toteuttaa.
+
+Käytetään 10 000 koodarin tiedostoa.
+Lajittelu on nopeaa (~1ms) silloin, kun vaihdetaan järjestys laskevasta nousevaan tai toisin päin. Hitaampaa (~700ms) silloin, kun järjestetään taulukko uudestaan eri perusteella eli koko nimestä koodarimeen tai toisin päin. Nimien vaihtaminen laskevasta nousevaan on nopeaa, koska reverse-algoritmin aikakompleksisuusluokka on O(n), eli sen suoritusaika kasvaa lineaarisesti tiedoston koon kasvaessa. Uudelleen lajittelu on taas hitaampaa, koska siinä käytetään toteuttamaani insertionSort-algoritmia, jonka aikakompleksisuusluokka on O(n^2). Näin ollen siis lajitteluun kuluva aika kasvaa eksponentiaalisesti tiedoston koon kasvaessa.
+
+Yleisesti, jos on taulukko valmiiksi lajiteltuna, niin kannattaa alkioiden järjestys vaihtaa päinvastaiseksi aina reverse-algoritmilla juuri sen takia, että sen aikakompleksisuusluokka on O(n), eli se toimii nopeasti, vaikka tiedostokoko olisi suuri.
+
+Toteuttamiani hakualgoritmeja kutsutaan lineaarisiksi, koska ne sisältävät kaikki vain yhden for silmukan, joka käydään läpi maksimissaan n kertaa. Hakualgoritmit eivät siis sisällä sisäkkäisiä looppeja. Algoritmien aikakompleksisuusluokka on siis O(n).
+
 ## 03-TASK
 
 ## 04-TASK
