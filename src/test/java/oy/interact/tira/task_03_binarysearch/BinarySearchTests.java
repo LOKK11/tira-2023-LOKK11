@@ -24,13 +24,13 @@ public class BinarySearchTests {
     @DisplayName("Very simple binary search tests for correctness")
     void simpleSearchTest() {
         Integer [] array = {1,2,3,4,5,6,7,8,9,10};
-        int index = Algorithms.binarySearch(4, array, 0, array.length);
+        int index = Algorithms.binarySearchR(4, array, 0, array.length);
         assertEquals(3, index, () -> "Number four must be in the index 3 in this case.");
-        index = Algorithms.binarySearch(1, array, 0, array.length);
+        index = Algorithms.binarySearchR(1, array, 0, array.length);
         assertEquals(0, index, () -> "Number one must be in the index 0 in this case.");
-        index = Algorithms.binarySearch(10, array, 0, array.length);
+        index = Algorithms.binarySearchR(10, array, 0, array.length);
         assertEquals(9, index, () -> "Number ten must be in the index 9 in this case.");
-        index = Algorithms.binarySearch(11, array, 0, array.length);
+        index = Algorithms.binarySearchR(11, array, 0, array.length);
         assertEquals(-1, index, () -> "Number eleven is not in array so must return -1.");
     }
 
@@ -39,12 +39,12 @@ public class BinarySearchTests {
     @DisplayName("Search from the middle when array has odd and even number of elements.")
     void searchFromMiddle() {
         Integer array[] = {1,2,3,4,5};
-        int index = Algorithms.binarySearch(3, array, 0, array.length);
+        int index = Algorithms.binarySearchR(3, array, 0, array.length);
         assertEquals(2, index, () -> "Number three must be in the index 2 (middle of the array) in this case.");
         Integer array2[] = {1,2,3,4,5,6};
-        index = Algorithms.binarySearch(3, array2, 0, array2.length);
+        index = Algorithms.binarySearchR(3, array2, 0, array2.length);
         assertEquals(2, index, () -> "Number three must be in the index 2 (left from middle of the array) in this case.");
-        index = Algorithms.binarySearch(4, array2, 0, array2.length);
+        index = Algorithms.binarySearchR(4, array2, 0, array2.length);
         assertEquals(3, index, () -> "Number three must be in the index 2 (left from middle of the array) in this case.");
     }
 
@@ -83,7 +83,7 @@ public class BinarySearchTests {
             while (counter-- >= 0) {
                 int toFind = tlr.nextInt(1, array.length);
                 start = System.nanoTime();
-                int binaryIndex = Algorithms.binarySearch(toFind, array, 0, array.length);
+                int binaryIndex = Algorithms.binarySearchR(toFind, array, 0, array.length);
                 assertTrue(binaryIndex >= 0, () -> "Binary search could not find the element to search");
                 binaryDuration += System.nanoTime() - start;
                 System.out.println("Index of " + toFind + " is: " + binaryIndex);    
@@ -135,7 +135,7 @@ public class BinarySearchTests {
             while (counter-- >= 0) {
                 int toFind = tlr.nextInt(0, array.length);
                 start = System.nanoTime();
-                int binaryIndex = Algorithms.binarySearch(array[toFind], array, 0, array.length);
+                int binaryIndex = Algorithms.binarySearchR(array[toFind], array, 0, array.length);
                 assertTrue(binaryIndex >= 0, () -> "Binary search could not find the element to search");
                 binaryDuration += System.nanoTime() - start;
                 System.out.println("Index of " + array[toFind] + " is: " + binaryIndex);    

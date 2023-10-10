@@ -70,12 +70,16 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 	@Override
 	public int indexOf(E element, Comparator<E> usingComparator) {
-		for (int i = 0; i < count; i++) {
-			if (array[i].compareTo(element) == 0) {
-				return i;
+		if (sorted == true) {
+			return Algorithms.binarySearch(element, array, 0, count, usingComparator);
+		} else {
+			for (int i = 0; i < count; i++) {
+				if (array[i].compareTo(element) == 0) {
+					return i;
+				}
 			}
+		return -1;	
 		}
-		return -1;		
 	}
 
 	// Note: This method is NOT USED by tests and TIRA Coders GUI.
@@ -88,7 +92,7 @@ public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E
 
 		if (sorted) {
 			// Does not work until binary search has been implemented.
-			foundIndex = Algorithms.binarySearch(element, (E[]) array, 0, count);
+			foundIndex = Algorithms.binarySearchR(element, (E[]) array, 0, count);
 			if (foundIndex >= 0) {
 				found = (E) array[foundIndex];
 				array[foundIndex] = null;

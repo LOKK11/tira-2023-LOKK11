@@ -89,7 +89,6 @@ public class Algorithms {
    ///////////////////////////////////////////
 
    public static <T> void reverse(T[] array, int fromIndex, int toIndex) {
-      // TODO: Student, implement this.
       int i = fromIndex;
       int j = toIndex -1;
       while (true) {
@@ -111,7 +110,38 @@ public class Algorithms {
    ///////////////////////////////////////////
 
    public static <T extends Comparable<T>> int binarySearch(T aValue, T[] fromArray, int fromIndex, int toIndex) {
+      int low = fromIndex;
+      int high = toIndex - 1;
+      while (low != high) {
+         int middle = low + (high - low) / 2;
+         if (aValue.compareTo(fromArray[middle]) <= 0) {
+            high = middle;
+         } else {
+            low = middle + 1;
+         }
+      }
+      if (aValue.compareTo(fromArray[low]) == 0) {
+         return low;
+      }
       return -1;
+   }
+
+   public static <T extends Comparable<T>> int binarySearchR(T aValue, T[] fromArray, int fromIndex, int toIndex) {
+      int low = fromIndex;
+      int high = toIndex - 1;
+      int middle = low + (high - low) / 2;
+      if (low == high) {
+         if (aValue.compareTo(fromArray[low]) == 0) {
+            return low;
+         } else {
+            return -1;
+         }
+      }
+      if (aValue.compareTo(fromArray[middle]) <= 0) {
+         return binarySearchR(aValue, fromArray, low, middle + 1);
+      } else {
+         return binarySearchR(aValue, fromArray, middle + 1, high + 1);
+      }
    }
 
    ///////////////////////////////////////////
@@ -119,7 +149,39 @@ public class Algorithms {
    ///////////////////////////////////////////
 
    public static <T> int binarySearch(T aValue, T[] fromArray, int fromIndex, int toIndex, Comparator<T> comparator) {
+      int low = fromIndex;
+      int high = toIndex - 1;
+      while (low != high) {
+         int middle = low + (high - low) / 2;
+         if (comparator.compare(aValue, fromArray[middle]) <= 0) {
+            high = middle;
+         } else {
+            low = middle + 1;
+         }
+      }
+      if (comparator.compare(aValue, fromArray[low]) == 0) {
+         return low;
+      }
       return -1;
+   }
+
+   public static <T> int binarySearchR(T aValue, T[] fromArray, int fromIndex, int toIndex, Comparator<T> comparator) {
+      int low = fromIndex;
+      int high = toIndex - 1;
+      int middle = low + (high - low) / 2;
+      if (low == high) {
+         if (comparator.compare(aValue, fromArray[low]) == 0) {
+            return low;
+         } else {
+            return -1;
+         }
+      }
+      if (comparator.compare(aValue, fromArray[middle]) <= 0) {
+         return binarySearchR(aValue, fromArray, low, middle + 1, comparator);
+      } else {
+         return binarySearchR(aValue, fromArray, middle + 1, high + 1, comparator);
+      }
+
    }
 
    public static <E extends Comparable<E>> void fastSort(E [] array) {

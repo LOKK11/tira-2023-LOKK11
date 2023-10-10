@@ -131,6 +131,95 @@ Yleisesti, jos on taulukko valmiiksi lajiteltuna, niin kannattaa alkioiden järj
 Toteuttamiani hakualgoritmeja kutsutaan lineaarisiksi, koska ne sisältävät kaikki vain yhden for silmukan, joka käydään läpi maksimissaan n kertaa. Hakualgoritmit eivät siis sisällä sisäkkäisiä looppeja. Algoritmien aikakompleksisuusluokka on siis O(n).
 
 ## 03-TASK
+![Graafit_testeistä](graafit_task_3.png)
+```
+n		Fill	Sort	Search	Total
+500		2		0		1833	1835
+1000	12		8		121		141
+1500	10		20		37		67
+2000	20		45		34		99
+2500	20		20		69		109
+3000	29		33		41		103
+3500	33		48		37		118
+4000	50		40		42		132
+4500	60		64		34		158
+5000	63		70		34		167
+5500	90		86		35		211
+6000	110		106		55		271
+6500	120		130		66		316
+7000	136		167		30		333
+7500	160		171		32		363
+8000	184		199		53		436
+8500	210		226		58		494
+9000	257		277		27		561
+9500	256		285		27		568
+10000	344		341		69		754
+10500	341		359		22		722
+11000	339		422		21		782
+11500	361		425		21		807
+12000	405		545		44		994
+12500	571		529		86		1186
+13000	506		615		20		1141
+13500	543		706		24		1273
+14000	702		668		20		1390
+14500	868		816		20		1704
+15000	762		812		20		1594
+15500	728		901		37		1666
+16000	954		887		20		1861
+16500	832		941		20		1793
+17000	892		1085	26		2003
+17500	944		1085	21		2050
+18000	1013	1169	21		2203
+18500	1162	1227	23		2412
+19000	1131	1328	21		2480
+19500	1309	1378	24		2711
+20000	990		1299	22		2311
+20500	1458	1546	24		3028
+21000	1487	1705	22		3214
+21500	1549	1653	21		3223
+22000	1760	1773	26		3559
+22500	1705	1959	21		3685
+23000	1834	2005	22		3861
+23500	2138	2080	25		4243
+24000	2139	2079	22		4240
+24500	2091	2150	28		4269
+25000	2076	2270	22		4368
+25500	2198	2371	24		4593
+26000	2318	2473	23		4814
+26500	1535	1952	36		3523
+27000	2678	2668	26		5372
+27500	2794	2837	26		5657
+28000	2877	2994	23		5894
+28500	2987	3100	24		6111
+29000	3244	3139	26		6409
+29500	3386	3428	23		6837
+30000	3461	3550	25		7036
+30500	3661	3634	38		7333
+31000	3831	3789	31		7651
+31500	4002	3957	26		7985
+32000	3372	3769	24		7165
+```
+
+Tein graafit vain nousevan järjestyksen testien tuloksista, koska laskevan järjestyksen testeistä tuli lähes samat arvot. Graafeista huomataan, että hakuun kulunut aika on pieni myös isoilla n arvoilla toisin kuin viime tehtävässä käytetyllä lineaarisella hakualgoritmilla.
+
+Tehdään testejä 50 000 koodarin tiedostolla
+
+Översti haku kesti 60ms
+Översti Avani Thierry fast search kesti 0ms
+Tuomala haku kesti 30ms
+Tuomala McLay Sajjad fast search kesti 0ms
+Liitiä haku kesti 20ms
+Liitiä Bertie Otto fast search kesti 0ms
+Häkki haku kesti 10ms
+Häkki Jiao Joynul fast search kesti 0ms
+Aalo haku kesti 0ms
+Aalo Dalton Cormack fast search kesti 0ms
+
+Huomataan, että kun mennään aakkosissa lähemmäs loppupäätä, lineaarisen haun aika kasvaa suurin piirtein lineaarisesti. Tämä johtuu siitä, että lineaarinen hakualgoritmi käy jokaisen nimen läpi ja palauttaa lopulta oikean. Lineaarisen haun aikakopleksisuusluokka on O(n).
+
+Nopea haku binäärihaulla taas kestää sijainnista riippumatta aina lähes yhtä kauan, ja huomattavasti vähemmän aikaa, kuin lineaarinen haku loppupäässä. Binäärihaku ei käy jokaista listan alkiota läpi, vaan jakaa listan aina kahteen osaan. Siksi binäärihaku toimii nopeasti myös isoilla tiedostoilla. Binäärihaun aikakopleksisuusluokka on O(log(n)). Binäärihakua voi ja kannattaa siis aina käyttää, kun halutaan etsiä jotain valmiiksi järjestetystä listasta.
+
+Suoritin binäärihaun myös rekursiivisena binarySearchR. Ilman vertailuoliota ja sen kanssa.
 
 ## 04-TASK
 
