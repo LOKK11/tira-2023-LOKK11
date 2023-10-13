@@ -223,6 +223,21 @@ Suoritin binäärihaun myös rekursiivisena binarySearchR. Ilman vertailuoliota 
 
 ## 04-TASK
 
+Tehtävää tehdessä opin, miten E tyypin listat toimivat ja miten stackeja käytetään hyväksi. Vaikeaa oli toteuttaa StackFactoryn luontimetodit. Helppoa oli parenthesischeck metodin koodin kirjoittaminen, kun oli ymmärtänyt pohjimmaisen idean.
+
+capacity(): O(1).
+push(): O(1) paitsi kun joudutaan reallokoimaan: O(n).
+pop(): O(1).
+peek(): O(1).
+size(): O(1).
+isEmpty(): O(1).
+clear(): O(1).
+toString(): O(n).
+
+Kaikkien totetuttamieni algoritmien aikakompleksisuusluokka on O(1) paitsi toSting, joka on O(n), ja reallokointialgoritmin myös O(n). Ne ovat ainoat, joissa on looppeja (1 molemmisa).
+
+ParenthesisCheck ei toimi oikein, mikäli heittomerkit ei ole merkitty oikein, koska algortimi ohittaa kaikki heittomerkin jälkeen tulevat merkit, seuraavaan heittomerkkiin asti. Eli jos alussa on yksi heittomerkki, eikä seuraavaa tule, ei algoritmi testaa ensimmäisen heittomerkin jälkeen mitään seuraavia merkkejä. 
+
 ## 05-TASK
 
 ## 06-TASK

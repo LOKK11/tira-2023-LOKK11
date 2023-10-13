@@ -8,7 +8,7 @@ public class ParenthesisChecker {
    }
 
    /**
-    * TODO: Student: Implement this method which checks if the given string has matching opening and closing
+    * Student: Implement this method which checks if the given string has matching opening and closing
     * parentheses. It should check for matching parentheses:
 
     *   Lorem ipsum ( dolor sit {  amet, [ consectetur adipiscing ] elit, sed } do eiusmod tempor ) incididunt ut...,
