@@ -83,7 +83,8 @@ public class StackImplementation<E> implements StackInterface<E> {
 
     @Override
     public void clear() {
-        Object[] tempArray = new Object[capacity];
+        Object[] tempArray = new Object[DEFAULT_STACK_SIZE];
+        capacity = DEFAULT_STACK_SIZE;
         itemArray = tempArray;
         count = 0;
     }
