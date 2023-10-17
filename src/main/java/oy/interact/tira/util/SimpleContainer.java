@@ -3,8 +3,6 @@ package oy.interact.tira.util;
 import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.function.Predicate;
-
-import oy.interact.tira.NotYetImplementedException;
 import oy.interact.tira.student.Algorithms;
 
 public class SimpleContainer<E extends Comparable<E>> implements TIRAContainer<E> {

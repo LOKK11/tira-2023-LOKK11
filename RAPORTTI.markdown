@@ -240,6 +240,14 @@ ParenthesisCheck ei toimi oikein, mikäli heittomerkit ei ole merkitty oikein, k
 
 ## 05-TASK
 
+Tehtävää tehdessä opin tekemään Exception luokkia ja palautin muistiin niiden käyttöä. Opin myös tapoja, jolla voidaan vähentää luokkakohtaisten muuttujien määrää queueImplementation luokassa. Vaikeinta oli saada toString toimimaan.
+
+Linkitetty lista on parempi, kuin taulukkopohjainen toteutus silloin, kun listaan tehdään paljon muutoksia. Lisäyksiä ja poistoja päihin tai keskelle ja silloin, kun halutaan välttyä allokoinnilta. Linkitettyyn listaan lisääminen ja siitä poistaminen on halpaa, koska pitää vain muuttaa nodejen linkkejä allokointia ei siis tarvita. Jos tiedetään, että listaan laitettava data tulee olemaan pieni, tarjoaa linkitetty lista parempaa joustavuutta.
+
+Taulukkopohjainen toteutus on parempi silloin, kun lisättävää on paljon ja poistettavaa vähän. Eli silloin, kun halutaan pääsääntöisesti lukea jonossa olevaa dataa sen täyttämisen jälkeen. Modernit tietokoneet suosivat taulukkopohjaista toteutusta koska siinä data on sijoitettu peräkkäisiin muistipaikkoihin toisin kuin linkitetyissä listoissa, joissa datan elementtejä on ympäri ramia.
+
+Kaikki toteuttamani metodit noudattavat annettuja aikakompleksisuusmääreitä.
+
 ## 06-TASK
 
 ## 07-TASK

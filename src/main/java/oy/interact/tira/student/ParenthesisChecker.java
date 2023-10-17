@@ -50,119 +50,124 @@ public class ParenthesisChecker {
     */
     public static int checkParentheses(StackInterface<Character> stack, String fromString) throws ParenthesesException {
       
-      int line = 1;
-      int column = 0;
-      int parentheses = 0;
-      // for each character in the input string
-      for (int i = 0; i < fromString.length(); i++) {
-         //increase column number
-         column++;
-         //if '\n' is found, increase value of row by one and reset
-         //value of column back to 0.
-         if (fromString.charAt(i) == '\n') {
-            column = 0;
-            line++;
-         }
-         //if already between quotes
-         if (!stack.isEmpty() && stack.peek() == '"') {
-            //if character is '"'
-            if (fromString.charAt(i) == '"') {
-               //remove '"' from stack and go to next char
-               stack.pop();
+      try {
+         int line = 1;
+         int column = 0;
+         int parentheses = 0;
+         // for each character in the input string
+         for (int i = 0; i < fromString.length(); i++) {
+            //increase column number
+            column++;
+            //if '\n' is found, increase value of row by one and reset
+            //value of column back to 0.
+            if (fromString.charAt(i) == '\n') {
+               column = 0;
+               line++;
                continue;
             }
-            //else ignore character
-            continue;
+            //if already between quotes
+            if (!stack.isEmpty() && stack.peek() == '"') {
+               //if character is '"'
+               if (fromString.charAt(i) == '"') {
+                  //remove '"' from stack and go to next char
+                  stack.pop();
+                  continue;
+               }
+               //else ignore character
+               continue;
+            }
+            //if not between quotes, but character is '"'
+            if (fromString.charAt(i) == '"') {
+               //push '"' in stack and go to next char
+               stack.push('"');
+               continue;
+            }
+            //if character is an opening parenthesis -- one of "([{"
+            //push it to stack and go to next char
+            switch (fromString.charAt(i)) {
+               case ('('):
+                  stack.push('(');
+                  parentheses++;
+                  continue;
+               case ('{'):
+                  stack.push('{');
+                  parentheses++;
+                  continue;
+               case ('['):
+                  stack.push('[');
+                  parentheses++;
+                  continue;
+            }
+            //if character is a closing parenthesis -- one of ")]}"
+            switch (fromString.charAt(i)) {
+               case (')'):
+                  //if stack is empty, throw "too many closing parentheses" -exception
+                  if (stack.isEmpty()) {
+                     throw new 
+                     ParenthesesException("Too many closing parentheses", 
+                     line, column, ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
+                  }
+                  //if stack.pop() doesn't return matching opening parenthesis,
+                  //throw "parentheses in wrong order" -exception
+                  if (stack.pop() != '(') {
+                     throw new 
+                     ParenthesesException(
+                     "Parentheses in wrong order", 
+                     line, column, ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
+                  }
+                  //else pop the matching parenthesis out and go to next char
+                  parentheses++;
+                  continue;
+               case ('}'):
+                  //if stack is empty, throw "too many closing parentheses" -exception
+                  if (stack.isEmpty()) {
+                     throw new 
+                     ParenthesesException("Too many closing parentheses", 
+                     line, column, ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
+                  }
+                  //if stack.pop() doesn't return matching opening parenthesis,
+                  //throw "parentheses in wrong order" -exception
+                  if (stack.pop() != '{') {
+                     throw new 
+                     ParenthesesException(
+                     "Parentheses in wrong order", 
+                     line, column, ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
+                  }
+                  //else pop the matching parenthesis out and go to next char
+                  parentheses++;
+                  continue;
+               case (']'):
+                  //if stack is empty, throw "too many closing parentheses" -exception
+                  if (stack.isEmpty()) {
+                     throw new 
+                     ParenthesesException("Too many closing parentheses", 
+                     line, column, ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
+                  }
+                  //if stack.pop() doesn't return matching opening parenthesis,
+                  //throw "parentheses in wrong order" -exception
+                  if (stack.pop() != '[') {
+                     throw new 
+                     ParenthesesException(
+                     "Parentheses in wrong order", 
+                     line, column, ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
+                  }
+                  //else pop the matching parenthesis out and go to next char
+                  parentheses++;
+                  continue;
+            }
          }
-         //if not between quotes, but character is '"'
-         if (fromString.charAt(i) == '"') {
-            //push '"' in stack and go to next char
-            stack.push('"');
-            continue;
+         // if the stack is not empty after all the characters have been handled
+         if (!stack.isEmpty()) {
+            //throw an exception since the string has more opening than closing parentheses.
+            throw new 
+            ParenthesesException(
+            "Too many opening parentheses", 
+            line, column, ParenthesesException.TOO_MANY_OPENING_PARENTHESES);
+         } else {
+            return parentheses;
          }
-         //if character is an opening parenthesis -- one of "([{"
-         //push it to stack and go to next char
-         switch (fromString.charAt(i)) {
-            case ('('):
-               stack.push('(');
-               parentheses++;
-               continue;
-            case ('{'):
-               stack.push('{');
-               parentheses++;
-               continue;
-            case ('['):
-               stack.push('[');
-               parentheses++;
-               continue;
-         }
-         //if character is a closing parenthesis -- one of ")]}"
-         switch (fromString.charAt(i)) {
-            case (')'):
-               //if stack is empty, throw "too many closing parentheses" -exception
-               if (stack.isEmpty()) {
-                  throw new 
-                  ParenthesesException("Too many closing parentheses", 
-                  line, column, ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
-               }
-               //if stack.pop() doesn't return matching opening parenthesis,
-               //throw "parentheses in wrong order" -exception
-               if (stack.pop() != '(') {
-                  throw new 
-                  ParenthesesException(
-                  "Parentheses in wrong order", 
-                  line, column, ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
-               }
-               //else pop the matching parenthesis out and go to next char
-               parentheses++;
-               continue;
-            case ('}'):
-               //if stack is empty, throw "too many closing parentheses" -exception
-               if (stack.isEmpty()) {
-                  throw new 
-                  ParenthesesException("Too many closing parentheses", 
-                  line, column, ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
-               }
-               //if stack.pop() doesn't return matching opening parenthesis,
-               //throw "parentheses in wrong order" -exception
-               if (stack.pop() != '{') {
-                  throw new 
-                  ParenthesesException(
-                  "Parentheses in wrong order", 
-                  line, column, ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
-               }
-               //else pop the matching parenthesis out and go to next char
-               parentheses++;
-               continue;
-            case (']'):
-               //if stack is empty, throw "too many closing parentheses" -exception
-               if (stack.isEmpty()) {
-                  throw new 
-                  ParenthesesException("Too many closing parentheses", 
-                  line, column, ParenthesesException.TOO_MANY_CLOSING_PARENTHESES);
-               }
-               //if stack.pop() doesn't return matching opening parenthesis,
-               //throw "parentheses in wrong order" -exception
-               if (stack.pop() != '[') {
-                  throw new 
-                  ParenthesesException(
-                  "Parentheses in wrong order", 
-                  line, column, ParenthesesException.PARENTHESES_IN_WRONG_ORDER);
-               }
-               //else pop the matching parenthesis out and go to next char
-               parentheses++;
-               continue;
-         }
-      }
-      // if the stack is not empty after all the characters have been handled
-      if (!stack.isEmpty()) {
-         //throw an exception since the string has more opening than closing parentheses.
-         throw new 
-         ParenthesesException(
-         "Too many opening parentheses", 
-         line, column, ParenthesesException.TOO_MANY_OPENING_PARENTHESES);
-      } else {
-         return parentheses;
+      } catch (OutOfMemoryError e) {
+         throw new StackAllocationException("Memory problem during stack allocation");
       }
    }
 }
