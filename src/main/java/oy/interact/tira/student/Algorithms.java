@@ -2,6 +2,8 @@ package oy.interact.tira.student;
 
 import java.util.Comparator;
 
+import javax.print.attribute.standard.PresentationDirection;
+
 public class Algorithms {
 
    private Algorithms() {
@@ -185,15 +187,119 @@ public class Algorithms {
    }
 
    public static <E extends Comparable<E>> void fastSort(E [] array) {
-      // TODO: Student, implement this.
+      quickSort(array, 0, array.length - 1);
    }
 
    public static <E> void fastSort(E [] array, Comparator<E> comparator) {
-      // TODO: Student, implement this.
+      quickSortC(array, 0, array.length - 1, comparator);
+      //heapSortC(array, 0, array.length, comparator);
    }
 
    public static <E> void fastSort(E [] array, int fromIndex, int toIndex, Comparator<E> comparator) {
-      // TODO: Student, implement this.
+      quickSortC(array, fromIndex, toIndex - 1, comparator);
+      //heapSortC(array, fromIndex, toIndex, comparator);
    }
 
+   public static <E> void quickSortC(E [] array, int fromIndex, int toIndex, Comparator<E> comparator) {
+      if (fromIndex < toIndex) {
+         int partitionIndex = partitionQuickC(array, fromIndex, toIndex, comparator);
+         quickSortC(array, fromIndex, partitionIndex, comparator);
+         quickSortC(array, partitionIndex + 1, toIndex, comparator);
+     }      
+   }
+
+   private static <E> int partitionQuickC(E[] array, int low, int high, Comparator<E> comparator) {
+      int midPoint = (int)(low + (high - low) / 2);
+      E pivot = array[midPoint];
+      int i = low - 1;
+      int j = high + 1;
+      while (true) {
+         do {
+            ++i;
+         } while (comparator.compare(array[i], pivot) < 0);
+         do {
+            --j;
+         } while (comparator.compare(array[j], pivot) > 0);
+         if (j <= i) {
+            return j;
+         }
+         swap(array, i, j);
+      }
+   }
+
+   public static <E extends Comparable<E>> void quickSort(E [] array, int fromIndex, int toIndex) {
+      if (fromIndex < toIndex) {
+         int partitionIndex = partitionQuick(array, fromIndex, toIndex);
+         quickSort(array, fromIndex, partitionIndex);
+         quickSort(array, partitionIndex + 1, toIndex);
+     }      
+   }
+
+   private static <E extends Comparable<E>> int partitionQuick(E[] array, int low, int high) {
+      int midPoint = (int)(low + (high - low) / 2);
+      E pivot = array[midPoint];
+      int i = low - 1;
+      int j = high + 1;
+      while (true) {
+         do {
+            ++i;
+         } while (array[i].compareTo(pivot) < 0);
+         do {
+            --j;
+         } while (array[j].compareTo(pivot) > 0);
+         if (j <= i) {
+            return j;
+         }
+         swap(array, i, j);
+      }
+   }
+
+   public static <E> void heapSortC(E [] array, int fromIndex, int toIndex, Comparator<E> comparator) {
+      if (toIndex > fromIndex) {
+         int length = toIndex - fromIndex;
+         heapify(array, length, fromIndex, comparator);
+         int end = length - 1;
+         while (end > 0) {
+            swap(array, end + fromIndex, fromIndex); 
+            --end;
+            siftDown(array, 0, end, fromIndex, comparator);
+         }
+      }
+   }
+
+   private static <E> void heapify(E [] array, int count, int startingIndex, Comparator<E> comparator) {
+      int start = parent(count - 1);
+      while (start >= 0) {
+         siftDown(array, start, count - 1, startingIndex, comparator);
+         --start;
+      }
+   }
+
+   private static <E> void siftDown(E [] array, int start, int end, int startingIndex, Comparator<E> comparator) {
+      int root = start;
+      while (leftChild(root) <= end) {
+         int child = leftChild(root);
+         int swap = root;
+         if (comparator.compare(array[swap + startingIndex], array[child + startingIndex]) < 0) {
+            swap = child;
+         }
+         if (child + 1 <= end && comparator.compare(array[swap + startingIndex], array[child + 1 + startingIndex]) < 0) {
+            swap = child + 1;
+         }
+         if (swap == root) {
+            return;
+         } else {
+            swap(array, root + startingIndex, swap + startingIndex);
+            root = swap;
+         }
+      }
+   }
+
+   private static int parent(int node) {
+      return (int)Math.floor((node - 1) / 2);
+   }
+
+   private static int leftChild(int node) {
+      return 2 * node + 1;
+   }
 }

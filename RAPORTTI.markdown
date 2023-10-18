@@ -250,6 +250,17 @@ Kaikki toteuttamani metodit noudattavat annettuja aikakompleksisuusmääreitä.
 
 ## 06-TASK
 
+Tehtävää tehdessä opin tekemään nopeita algoritmeja. Helppoa oli tiedon löytäminen ja algoritmien kirjoittaminen. Vaikeaa oli saada heapsort toimimaan muulloinkin, kuin että alkuindeksi on 0.
+
+Testien tulokset eri algoritmeille
+![Graafit](task6-data.PNG)
+
+Huomataan, että quicksort ja heapsort ovat huomattavasti tehokkaampia isojen tiedostojen avaamisessa, kuin insertion sort.
+
+Quicksort on tässä hieman nopeampi, kuin heapsort. Molempien aikakompleksisuusluokka on teorian mukaan O(n*log(n)). Graafit tukevat myös tätä väitettä. Ne eivät ole aivan lineaariset, mutta eivät myöskään kasva yhtä eksponentiaalisesti, kuin insertion sortin graafi.
+
+Toteutin Quicksortin siten, että pivot saa aina keskimmäisen arvon. Tämän ansiosta quicksortin kompleksisuusluokka ei voi olla huonoimmassakaan tapauksessa O(n^2)
+
 ## 07-TASK
 
 ## 08-TASK
