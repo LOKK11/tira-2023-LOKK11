@@ -254,12 +254,15 @@ Tehtävää tehdessä opin tekemään nopeita algoritmeja. Helppoa oli tiedon l�
 
 Testien tulokset eri algoritmeille
 ![Graafit](task6-data.PNG)
+![mergeSort](mergeSort.png)
 
-Huomataan, että quicksort ja heapsort ovat huomattavasti tehokkaampia isojen tiedostojen avaamisessa, kuin insertion sort.
+Huomataan, että quicksort, heapsort ja mergesort ovat huomattavasti tehokkaampia isojen tiedostojen avaamisessa, kuin insertion sort.
 
 Quicksort on tässä hieman nopeampi, kuin heapsort. Molempien aikakompleksisuusluokka on teorian mukaan O(n*log(n)). Graafit tukevat myös tätä väitettä. Ne eivät ole aivan lineaariset, mutta eivät myöskään kasva yhtä eksponentiaalisesti, kuin insertion sortin graafi.
 
-Toteutin Quicksortin siten, että pivot saa aina keskimmäisen arvon. Tämän ansiosta quicksortin kompleksisuusluokka ei voi olla huonoimmassakaan tapauksessa O(n^2)
+Toteutin Quicksortin siten, että pivot saa aina keskimmäisen arvon. Tämän ansiosta quicksortin aikakompleksisuusluokka ei voi olla huonoimmassakaan tapauksessa O(n^2)
+
+Toteutin mergesortin jälkeenpäin ja tein sen testin eri koneella, joka on hieman nopeampi kuin se jolla tein testit muille algoritmeille. Mutta testasin samalla koneella myös quick- ja heapsortteja ja totesin, että mergesort on kaikista nopein tässä käyttötarkoituksessa. Mergesortin aikakompleksisuusluokka on O(n*log(n)) niin huonoimmassa, kuin parhaassakin tapauksessa.
 
 ## 07-TASK
 

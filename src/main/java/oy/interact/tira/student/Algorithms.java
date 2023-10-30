@@ -191,12 +191,14 @@ public class Algorithms {
    }
 
    public static <E> void fastSort(E [] array, Comparator<E> comparator) {
-      quickSortC(array, 0, array.length - 1, comparator);
+      //quickSortC(array, 0, array.length - 1, comparator);
+      mergeSortC(array, 0, array.length - 1, comparator);
       //heapSortC(array, 0, array.length, comparator);
    }
 
    public static <E> void fastSort(E [] array, int fromIndex, int toIndex, Comparator<E> comparator) {
-      quickSortC(array, fromIndex, toIndex - 1, comparator);
+      //quickSortC(array, fromIndex, toIndex - 1, comparator);
+      mergeSortC(array, fromIndex, toIndex - 1, comparator);
       //heapSortC(array, fromIndex, toIndex, comparator);
    }
 
@@ -302,4 +304,57 @@ public class Algorithms {
    private static int leftChild(int node) {
       return 2 * node + 1;
    }
+
+   public static <E> void mergeSortC(E [] array, int fromIndex, int toIndex, Comparator<E> comparator) {
+      if (toIndex > fromIndex) {
+         int mid = (int)Math.floor(fromIndex + (toIndex - fromIndex) / 2);
+         mergeSortC(array, fromIndex, mid, comparator);
+         mergeSortC(array, mid + 1, toIndex, comparator);
+         merge(array, fromIndex, mid, toIndex, comparator);
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   private static <E> void merge(E array[], int fromIndex, int middle, int toIndex, Comparator<E> comparator) {
+      int i, j, k;
+      int n1 = middle - fromIndex + 1;
+      int n2 = toIndex - middle;
+      Object leftArray[] = new Object[n1];
+      Object rightArray[] = new Object[n2];
+
+      for (i = 0; i < n1; i++) {
+         leftArray[i] = array[fromIndex + i];
+      }
+      for (j = 0; j < n2; j++) {
+         rightArray[j] = array[middle + 1 + j];
+      }
+      
+      i = 0;
+      j = 0;
+      k = fromIndex;
+
+      while (i < n1 && j < n2) {
+         if (comparator.compare((E)leftArray[i], (E)rightArray[j]) <= 0) {
+            array[k] = (E)leftArray[i];
+            ++i;
+         } else {
+            array[k] = (E)rightArray[j];
+            ++j;
+         }
+         ++k;
+      }
+
+      while (i < n1) {
+         array[k] = (E)leftArray[i];
+         ++i;
+         ++k;
+      }
+
+      while (j < n2) {
+         array[k] = (E)rightArray[j];
+         ++j;
+         ++k;
+      }      
+   }
+
 }
