@@ -3,10 +3,10 @@ package oy.interact.tira.student;
 import java.util.function.Predicate;
 
 public class Node<K extends Comparable<K>, V> {
-    K key;
-    V value;
-    Node<K,V> left;
-    Node<K,V> right;
+    private K key;
+    private V value;
+    private Node<K,V> left;
+    private Node<K,V> right;
     
     public Node(K key, V value) {
         this.key = key;
@@ -52,7 +52,7 @@ public class Node<K extends Comparable<K>, V> {
     }
 
     public V find(Predicate<V> searcher) {
-        if (searcher.compareTo(key) < 0) {
+        if (searcher.test(value)) {
             if (left == null) {
                 return null;
             } else {
@@ -69,56 +69,42 @@ public class Node<K extends Comparable<K>, V> {
         }
     }
 
-    public V remove(K key) {
+    public V remove(Node<K,V> node, K key) {
         if (this.key.compareTo(key) < 0) {
             if (left == null) {
                 return null;
             } else {
-                return left.remove(key);
+                return left.remove(left, key);
             } 
         } else if (this.key.compareTo(key) > 0) {
             if (right == null) {
                 return null;
             } else {
-                 return right.remove(key);
+                 return right.remove(right, key);
             }
         } else {
             V tempValue = value;
-            value = getNextvalue();
-            key = getNextKey();
+            if (left == null && right == null) {
+                node = null;
+            } else if (left != null && right != null) {
+                Node<K,V> min = getMin(right);
+                this.value = min.getValue();
+                this.key = min.getKey();
+                right.remove(right, this.key);
+            } else if (right != null) {
+                node = right;
+            } else {
+                node = left;
+            }
             return tempValue;
         }
     }
 
-    private V getNextvalue() {
-        if (right == null) {
-            return value;
-        } else {
-            return right.getMinValue();
-        }
-    }
-
-    private V getMinValue() {
+    private Node<K,V> getMin(Node<K,V> node) {
         if (left == null) {
-            return value;
+            return node;
         } else {
-            return left.getMinValue();
-        }
-    }
-
-    private K getNextKey() {
-        if (right == null) {
-            return key;
-        } else {
-            return right.getMinKey();
-        }
-    }
-
-    private K getMinKey() {
-        if (left == null) {
-            return key;
-        } else {
-            return left.getMinKey();
+            return left.getMin(left);
         }
     }
 
@@ -128,5 +114,13 @@ public class Node<K extends Comparable<K>, V> {
 
     public V getValue() {
         return value;
+    }
+
+    public Node<K,V> getRight() {
+        return right;
+    }
+
+    public Node<K,V> getLeft() {
+        return left;
     }
 }

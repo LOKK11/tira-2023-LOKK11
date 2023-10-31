@@ -1,12 +1,21 @@
 package oy.interact.tira.student;
 
+import java.util.Comparator;
 import java.util.function.Predicate;
 
+import oy.interact.tira.util.Pair;
 import oy.interact.tira.util.TIRAKeyedOrderedContainer;
 
 public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V> {
     
-    Node<K,V> root;
+    private Node<K,V> root = null;
+    private int size = 0;
+    private Comparator<K> comparator;
+    private int capacity = Integer.MAX_VALUE;
+
+    public BinaryTree(Comparator<K> comparator) {
+        this.comparator = comparator;
+    }
 
     @Override
     public void add(K key, V value) throws OutOfMemoryError, IllegalArgumentException {
@@ -16,8 +25,9 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         Node<K,V> node = new Node<>(key, value);
         if (root == null) {
             root = node;
-        } else {
+        } else if (size < capacity) {
             root.add(node);
+            ++size;
         }
     }
 
@@ -41,7 +51,11 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (root == null) {
             return null;
         } else {
-            return root.remove(key);
+            V tempValue = root.remove(root, key);
+            if (tempValue != null) {
+                --size;
+            }
+            return tempValue;
         } 
     }
 
@@ -51,5 +65,33 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         } else {
             return root.find(searcher);
         }
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public int capacity() {
+        return capacity;
+    }
+
+    public void ensureCapacity(int capacity) throws OutOfMemoryError, IllegalArgumentException {
+        if (capacity <= size()) {
+            throw new IllegalArgumentException("Capacity cannot less than the amount of pairs currently on tree.");
+        }
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity cannot be less than 1");
+        }
+        this.capacity = capacity;
+    }
+
+    public void clear() {
+        root = null;
+        size = 0;
+    }
+
+    public Pair<K,V> [] toArray() throws Exception {
+        Object[] array = new Object[size()];
+        return (Pair<K,V>)array;
     }
 }
