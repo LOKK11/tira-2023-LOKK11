@@ -2,6 +2,8 @@ package oy.interact.tira.student;
 
 import java.util.function.Predicate;
 
+import oy.interact.tira.util.Pair;
+
 public class Node<K extends Comparable<K>, V> {
     private K key;
     private V value;
@@ -53,20 +55,21 @@ public class Node<K extends Comparable<K>, V> {
 
     public V find(Predicate<V> searcher) {
         if (searcher.test(value)) {
-            if (left == null) {
-                return null;
-            } else {
-                return left.get(key);
-            } 
-        } else if (this.key.compareTo(key) > 0) {
-            if (right == null) {
-                return null;
-            } else {
-                 return right.get(key);
-            }
-        } else {
             return value;
         }
+        if (left != null) {
+            V tempValue = left.find(searcher);
+            if (tempValue != null) {
+                return tempValue;
+            }
+        }
+        if (right != null) {
+            V tempValue = right.find(searcher);
+            if (tempValue != null) {
+                return tempValue;
+            }
+        } 
+        return null;
     }
 
     public V remove(Node<K,V> node, K key) {
@@ -122,5 +125,16 @@ public class Node<K extends Comparable<K>, V> {
 
     public Node<K,V> getLeft() {
         return left;
+    }
+
+    public int indexOf(K itemKey) {
+        if (left != null) {
+            int tempIndex = -1;
+            tempIndex = left.indexOf(itemKey);
+            if (tempIndex != -1) {
+                return tempIndex;
+            }
+        }
+
     }
 }
