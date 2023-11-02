@@ -9,12 +9,16 @@ public class Node<K extends Comparable<K>, V> {
     private V value;
     private Node<K,V> left;
     private Node<K,V> right;
+    private int leftChildren;
+    private int rightChildren;
     
     public Node(K key, V value) {
         this.key = key;
         this.value = value;
         left = null;
         right = null;
+        leftChildren = 0;
+        rightChildren = 0;
     }
 
     public void add(Node<K,V> node) {
@@ -22,12 +26,14 @@ public class Node<K extends Comparable<K>, V> {
             if (left == null) {
                 left = node;
             } else {
+                ++leftChildren;
                 left.add(node);
             } 
         } else if (node.getKey().compareTo(key) > 0) {
             if (right == null) {
                 right = node;
             } else {
+                ++rightChildren;
                 right.add(node);
             }             
         } else {
@@ -72,31 +78,42 @@ public class Node<K extends Comparable<K>, V> {
         return null;
     }
 
-    public V remove(Node<K,V> node, K key) {
+    public V remove(Node<K,V> node, K key, V value) {
         if (this.key.compareTo(key) < 0) {
             if (left == null) {
                 return null;
             } else {
-                return left.remove(left, key);
+                value = left.remove(left, key, value);
+                if (value != null) {
+                    --leftChildren;
+                }
+                return value;
             } 
         } else if (this.key.compareTo(key) > 0) {
             if (right == null) {
                 return null;
             } else {
-                 return right.remove(right, key);
+                value = right.remove(right, key, value);
+                if (value != null) {
+                    --rightChildren;
+                }
+                return value;
             }
         } else {
-            V tempValue = value;
+            V tempValue = this.value;
             if (left == null && right == null) {
                 node = null;
             } else if (left != null && right != null) {
                 Node<K,V> min = getMin(right);
                 this.value = min.getValue();
                 this.key = min.getKey();
-                right.remove(right, this.key);
+                --rightChildren;
+                right.remove(right, this.key, value);
             } else if (right != null) {
+                --rightChildren;
                 node = right;
             } else {
+                --leftChildren;
                 node = left;
             }
             return tempValue;
@@ -127,14 +144,11 @@ public class Node<K extends Comparable<K>, V> {
         return left;
     }
 
-    public int indexOf(K itemKey) {
-        if (left != null) {
-            int tempIndex = -1;
-            tempIndex = left.indexOf(itemKey);
-            if (tempIndex != -1) {
-                return tempIndex;
-            }
-        }
+    public int getLeftChildren() {
+        return leftChildren;
+    }
 
+    public int getRightChildren() {
+        return rightChildren;
     }
 }

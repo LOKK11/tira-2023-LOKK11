@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import oy.interact.tira.util.Pair;
 import oy.interact.tira.util.TIRAKeyedOrderedContainer;
+import oy.interact.tira.util.Visitor;
 
 public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedContainer<K, V> {
     
@@ -14,6 +15,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     private int capacity = Integer.MAX_VALUE;
     private Object[] array;
     private int addedToArray = 0;
+    private int index;
 
     public BinaryTree(Comparator<K> comparator) {
         this.comparator = comparator;
@@ -27,6 +29,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         Node<K,V> node = new Node<>(key, value);
         if (root == null) {
             root = node;
+            ++size;
         } else if (size < capacity) {
             root.add(node);
             ++size;
@@ -53,7 +56,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (root == null) {
             return null;
         } else {
-            V tempValue = root.remove(root, key);
+            V tempValue = root.remove(root, key, null);
             if (tempValue != null) {
                 --size;
             }
@@ -61,6 +64,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         } 
     }
 
+    @Override 
     public V find(Predicate<V> searcher) {
         if (root == null) {
             return null;
@@ -69,14 +73,17 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         }
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public int capacity() {
         return capacity;
     }
 
+    @Override
     public void ensureCapacity(int capacity) throws OutOfMemoryError, IllegalArgumentException {
         if (capacity <= size()) {
             throw new IllegalArgumentException("Capacity cannot less than the amount of pairs currently on tree.");
@@ -87,11 +94,13 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         this.capacity = capacity;
     }
 
+    @Override
     public void clear() {
         root = null;
         size = 0;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Pair<K,V> [] toArray() throws Exception {
         if (root != null) {
@@ -103,7 +112,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         return null;
     }
 
-    public void makeArray(Node<K,V> node) {
+    private void makeArray(Node<K,V> node) {
         if (node.getLeft() != null) {
             makeArray(node.getLeft());
         }
@@ -114,14 +123,84 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         }
     }
 
-    public void addToArray(Pair<K,V> pair) {
+    private void addToArray(Pair<K,V> pair) {
         array[++addedToArray - 1] = pair;
     }
 
-    public int indexOf(K itemKey) {
-        if (root != null) {
-            return root.indexOf(itemKey);
+    @Override
+    public int findIndex(Predicate<V> searcher) {
+        if (root == null) {
+            return -1;
         }
-        return -1;
+        return findIndexRecursion(searcher, root, -1);
+    }
+
+    private int findIndexRecursion(Predicate<V> searcher, Node<K,V> node, int value) {
+        if (node.getLeft() != null) {
+            value = findIndexRecursion(searcher, node.getLeft(), value);
+            if (value != -1) {
+                return value;
+            }
+        }
+
+        if (searcher.test(node.getValue())) {
+            return index;
+        }
+        ++index;
+
+        if (node.getRight() != null) {
+            value = findIndexRecursion(searcher, node.getRight(), value);
+            if (value != -1) {
+                return value;
+            }
+        }
+        return value;
+    }
+
+    @Override
+    public Pair<K,V> getIndex(int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Invalid index value");
+        }
+        if (root == null) {
+            return null;
+        }
+        return getIndexRecursion(root, index);
+    }
+
+    private Pair<K,V> getIndexRecursion(Node<K,V> node, int index) {
+        if (node.getLeftChildren() > index) {
+            return getIndexRecursion(node.getLeft(), index);
+        } else if (node.getLeftChildren() < index) {
+            return getIndexRecursion(node.getRight(), index);
+        } else {
+            return new Pair<K,V>(node.getKey(), node.getValue());
+        }
+    }
+
+    @Override
+    public int indexOf(K itemKey) {
+        if (root == null) {
+            return -1;
+        }
+        index = root.getLeftChildren();
+        return indexOfRecursion(itemKey, root, index);
+    }
+
+    private int indexOfRecursion(K itemKey, Node<K,V> node, int index) {
+        if (itemKey.compareTo(node.getKey()) < 0) {
+            index -= node.getLeft().getRightChildren() + 1;
+            return indexOfRecursion(itemKey, node.getLeft(), index);
+        } else if (itemKey.compareTo(node.getKey()) > 0) {
+            index += node.getRight().getLeftChildren() + 1;
+            return indexOfRecursion(itemKey, node.getRight(), index);          
+        } else {
+            return index;
+        }
+    }
+
+    @Override
+    public void accept(Visitor<K,V> visitor) throws Exception {
+
     }
 }
