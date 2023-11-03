@@ -24,6 +24,7 @@ public class Node<K extends Comparable<K>, V> {
     public void add(Node<K,V> node) {
         if (node.getKey().compareTo(key) < 0) {
             if (left == null) {
+                ++leftChildren;
                 left = node;
             } else {
                 ++leftChildren;
@@ -31,6 +32,7 @@ public class Node<K extends Comparable<K>, V> {
             } 
         } else if (node.getKey().compareTo(key) > 0) {
             if (right == null) {
+                ++rightChildren;
                 right = node;
             } else {
                 ++rightChildren;
@@ -42,13 +44,13 @@ public class Node<K extends Comparable<K>, V> {
     }
 
     public V get(K key) {
-        if (this.key.compareTo(key) < 0) {
+        if (key.compareTo(this.key) < 0) {
             if (left == null) {
                 return null;
             } else {
                 return left.get(key);
             } 
-        } else if (this.key.compareTo(key) > 0) {
+        } else if (key.compareTo(this.key) > 0) {
             if (right == null) {
                 return null;
             } else {

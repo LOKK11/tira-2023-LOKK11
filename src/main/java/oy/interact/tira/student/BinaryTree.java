@@ -13,7 +13,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     private int size = 0;
     private Comparator<K> comparator;
     private int capacity = Integer.MAX_VALUE;
-    private Object[] array;
+    private Pair<K,V>[] array;
     private int addedToArray = 0;
     private int index;
 
@@ -105,9 +105,9 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     public Pair<K,V> [] toArray() throws Exception {
         if (root != null) {
             addedToArray = 0;
-            array = new Object[size];
+            array = new Pair[size];
             makeArray(root);
-            return (Pair<K, V>[]) array;
+            return array;
         }
         return null;
     }
@@ -132,6 +132,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (root == null) {
             return -1;
         }
+        index = 0;
         return findIndexRecursion(searcher, root, -1);
     }
 
@@ -172,6 +173,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (node.getLeftChildren() > index) {
             return getIndexRecursion(node.getLeft(), index);
         } else if (node.getLeftChildren() < index) {
+            index -= node.getLeftChildren() + 1;
             return getIndexRecursion(node.getRight(), index);
         } else {
             return new Pair<K,V>(node.getKey(), node.getValue());
