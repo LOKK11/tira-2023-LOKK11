@@ -2,8 +2,6 @@ package oy.interact.tira.student;
 
 import java.util.function.Predicate;
 
-import oy.interact.tira.util.Pair;
-
 public class Node<K extends Comparable<K>, V> {
     private K key;
     private V value;
@@ -19,28 +17,6 @@ public class Node<K extends Comparable<K>, V> {
         right = null;
         leftChildren = 0;
         rightChildren = 0;
-    }
-
-    public void add(Node<K,V> node) {
-        if (node.getKey().compareTo(key) < 0) {
-            if (left == null) {
-                ++leftChildren;
-                left = node;
-            } else {
-                ++leftChildren;
-                left.add(node);
-            } 
-        } else if (node.getKey().compareTo(key) > 0) {
-            if (right == null) {
-                ++rightChildren;
-                right = node;
-            } else {
-                ++rightChildren;
-                right.add(node);
-            }             
-        } else {
-            this.value = node.getValue();
-        }
     }
 
     public V get(K key) {
