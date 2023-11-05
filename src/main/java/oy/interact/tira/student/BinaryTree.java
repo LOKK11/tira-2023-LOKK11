@@ -31,8 +31,40 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
             root = node;
             ++size;
         } else if (size < capacity) {
-            root.add(node);
-            ++size;
+            if (addRecursion(node, root)) {
+                ++size;
+            }
+        }
+    }
+
+    private boolean addRecursion(Node<K,V> newNode, Node<K,V> node) {
+        if (newNode.getKey().compareTo(node.getKey()) < 0) {
+            if (node.getLeft() == null) {
+                node.addLeftChild();
+                node.setLeft(newNode);
+                return true;
+            } else {
+                if (addRecursion(newNode, node.getLeft())) {
+                    node.addLeftChild();
+                    return true;
+                }
+                return false;
+            }
+        } else if (newNode.getKey().compareTo(node.getKey()) > 0) {
+            if (node.getRight() == null) {
+                node.addRightChild();
+                node.setRight(newNode);
+                return true;
+            } else {
+                if (addRecursion(newNode, node.getRight())) {
+                    node.addRightChild();
+                    return true;
+                }
+                return false;
+            }
+        } else {
+            node.setValue(node.getValue());
+            return false;
         }
     }
 

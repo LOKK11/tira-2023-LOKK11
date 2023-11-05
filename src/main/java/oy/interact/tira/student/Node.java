@@ -153,4 +153,24 @@ public class Node<K extends Comparable<K>, V> {
     public int getRightChildren() {
         return rightChildren;
     }
+
+    public void addLeftChild() {
+        ++leftChildren;
+    }
+
+    public void setLeft(Node<K,V> node) {
+        this.left = node;
+    }
+
+    public void addRightChild() {
+        ++rightChildren;
+    }
+
+    public void setRight(Node<K,V> node) {
+        this.right = node;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
+    }
 }
