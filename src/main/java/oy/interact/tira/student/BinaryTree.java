@@ -16,6 +16,8 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     private Pair<K,V>[] array;
     private int addedToArray = 0;
     private int index;
+    private int maxDepth = -1;
+    private int depth;
 
     public BinaryTree(Comparator<K> comparator) {
         this.comparator = comparator;
@@ -30,40 +32,53 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (root == null) {
             root = node;
             ++size;
+            maxDepth = 0;
         } else if (size < capacity) {
+            depth = 0;
             if (addRecursion(node, root)) {
                 ++size;
+                if (depth > maxDepth) {
+                    maxDepth = depth;
+                }
             }
         }
     }
 
     private boolean addRecursion(Node<K,V> newNode, Node<K,V> node) {
-        if (newNode.getKey().compareTo(node.getKey()) < 0) {
-            if (node.getLeft() == null) {
-                node.addLeftChild();
-                node.setLeft(newNode);
-                return true;
-            } else {
-                if (addRecursion(newNode, node.getLeft())) {
+        if (!newNode.getValue().equals(node.getValue())) {    
+            if (newNode.getKey().compareTo(node.getKey()) < 0) {
+                ++depth;
+                if (node.getLeft() == null) {
                     node.addLeftChild();
+                    node.setLeft(newNode);
                     return true;
+                } else {
+                    if (addRecursion(newNode, node.getLeft())) {
+                        node.addLeftChild();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        } else if (newNode.getKey().compareTo(node.getKey()) > 0) {
-            if (node.getRight() == null) {
-                node.addRightChild();
-                node.setRight(newNode);
-                return true;
-            } else {
-                if (addRecursion(newNode, node.getRight())) {
+            } else if (newNode.getKey().compareTo(node.getKey()) > 0) {
+                ++depth;
+                if (node.getRight() == null) {
                     node.addRightChild();
+                    node.setRight(newNode);
                     return true;
+                } else {
+                    if (addRecursion(newNode, node.getRight())) {
+                        node.addRightChild();
+                        return true;
+                    }
+                    return false;
                 }
+            } else {
+                node.setValue(node.getValue());
                 return false;
             }
         } else {
-            node.setValue(node.getValue());
+            node.setValue(newNode.getValue());
+            node.setKey(newNode.getKey());
             return false;
         }
     }
@@ -236,5 +251,9 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     @Override
     public void accept(Visitor<K,V> visitor) throws Exception {
 
+    }
+
+    public int getMaxDepth() {
+        return maxDepth;
     }
 }

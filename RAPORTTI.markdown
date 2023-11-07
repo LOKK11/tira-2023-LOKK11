@@ -266,6 +266,49 @@ Toteutin mergesortin jälkeenpäin ja tein sen testin eri koneella, joka on hiem
 
 ## 07-TASK
 
+Tehtävää tehdessä opin paljon Javan rajapintojen toiminnasta. Opin toteuttamaan ja käyttämään BST:tä. Vaikeaa oli saada toArray toimimaan. Helppoa oli rekusrsiivisten algoritmien toteutus.
+
+BST-optimaalinen syvyys on aina log(n). Muutin BSTPerformanceTests testejä niin, että koodareiden lisäämisen jälkeen tulostetaan puun maksimisyvyys ja puun optimaalinen syvyys kullakin solmumäärällä.
+ Max depth in bst is 12, optimal depth for 100 nodes is 6
+ Max depth in bst is 21, optimal depth for 1000 nodes is 9
+ Max depth in bst is 28, optimal depth for 5000 nodes is 12
+ Max depth in bst is 29, optimal depth for 10000 nodes is 13
+ Max depth in bst is 39, optimal depth for 50000 nodes is 15
+ Max depth in bst is 37, optimal depth for 100000 nodes is 16
+ Max depth in bst is 50, optimal depth for 1000000 nodes is 19
+ Max depth in bst is 52, optimal depth for 2000000 nodes is 20
+
+Käytin laskemisessa luokassa BinaryTree toteuttamaani maxDepth laskuria.
+
+```java
+System.out.format(" Max depth in bst is %d, optimal depth for %d nodes is %d%n", 
+fastBST.getMaxDepth(), fastBST.size(), 
+(int)Math.floor(Math.log(fastBST.size())/Math.log(2)));
+```
+Lisäsin testiin tämän koodipätkän.
+
+Huomataan tulostuksista, että Puun todellinen syvyys on joka kerralla hieman yli puolet enemmän, kuin puun optimaalinen syvyys.
+
+Toteutin kaikki metodit rekursiivisesti eli tyylillä A. Metodit indexOf ja getIndex toteutin tyylillä D hyödyntäen lapsisolmujen määrää kussakin haarassa. Valitsin rekursiivisen toteutustavan, koska se on minulle kaikista selkein. Valitsin tavan D silloin, kun oli mahdollista, koska se on huomattavasti nopeampi, kuin kaikkien solmujen läpikäynti yksitellen. O(n) vs O(log(n))
+
+Jos toteuttaisin uudestaan, niin toteuttaisin hyödyntämällä visitoria, koska se vaikuttaa kätevältä.
+
+Data simplecontainer testeistä. 1000000 koodarin tiedoston käsittely oli liian hidasta, joten jätin sen pois. (Ei suoriutunut 20 minuutissa)
+![SimpleContainer](compare_simpleContainer_data.png)
+
+Data bst-lle. 2000000 koodarin tiedoston käsittelyssä tuli OutOfMemoryException, joten nostin kekomuistin määrää testeille.
+![bst_graph](bst_graph.png)
+
+Huomataan, että binäärisen hakupuun add-algoritmi on huomattavasti nopeampi, kuin SimpleConainerissa toteutettu add-algoritmi. Binäärisen hakupuun lisäämisen aikakompleksisuusluokka on O(log(n)) ja SimpleContainerin O(n). Myös graafit tukevat tätä väitettä.
+
+Etsiminen on suunnilleen yhtä nopeaa molemmissa toteutuksissa. Molempien aikakompleksisuusluokka on O(n).
+
+Get(index) on hieman nopeampi SimpleContainerissa, koska sen aikakompleksisuusluokka on O(1) kun taas hakupuussa se on minun toteuttamalla tavalla O(log(n)).
+
+Molempien toteutuksien toArray-algoritmin aikakompleksisuusluokka on O(n), joten ne ovat myös graafeissa suunnilleen yhtä nopeat.
+
+Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja getIndex algoritmeissä.
+
 ## 08-TASK
 
 ## 09-TASK

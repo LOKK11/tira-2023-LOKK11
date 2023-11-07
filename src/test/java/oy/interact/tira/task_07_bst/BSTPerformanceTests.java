@@ -104,6 +104,8 @@ public class BSTPerformanceTests {
 					long end = System.currentTimeMillis();
 					long duration = end - start;
 					System.out.format(" Step 3/6: Adding to BST from Coders array it took %d ms%n", duration);
+					System.out.format(" Max depth in bst is %d, optimal depth for %d nodes is %d%n", 
+					fastBST.getMaxDepth(), fastBST.size(), (int)Math.floor(Math.log(fastBST.size())/Math.log(2)));
 					assertEquals(coders.length, fastBST.size(), "Coder array length and BST.size do not match");
 					/*
 					 * testfile,bytes,elements,duration

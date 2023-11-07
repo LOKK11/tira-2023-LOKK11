@@ -149,4 +149,8 @@ public class Node<K extends Comparable<K>, V> {
     public void setValue(V value) {
         this.value = value;
     }
+
+    public void setKey(K key) {
+        this.key = key;
+    }
 }

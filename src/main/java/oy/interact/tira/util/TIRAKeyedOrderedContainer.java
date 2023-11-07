@@ -76,4 +76,6 @@ public interface TIRAKeyedOrderedContainer<K extends Comparable<K>, V> extends T
 	 */
 	@Override
 	void accept(Visitor<K,V> visitor) throws Exception;
+
+	int getMaxDepth();
 }
