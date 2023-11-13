@@ -26,4 +26,8 @@ public class Pair<K extends Comparable<K>,V> {
 	public void setRemoved() {
 		removed = true;
 	}
+
+    public void setValue(V value) {
+		this.value = value;
+    }
 }
