@@ -14,12 +14,10 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
         }
         try {
             for (int i = 0; i < array.length - 1; ++i) {
-                int hashIndex = hashProbe(key, i);
-                if (array[hashIndex] == null) {
-                    array[hashIndex] = new Pair<K,V>(key, value);
-                } else if (array[hashIndex].getKey().equals(key)) {
-                    array[hashIndex].setValue(value);
-                }
+                int hashIndex = hashFunc(key, i);
+                if (array[hashIndex] != null) {
+                    
+                } 
             }
             throw new IndexOutOfBoundsException("Index of hash went over the size of the array.");
         } catch (OutOfMemoryError outOfMemoryError) {
@@ -27,9 +25,46 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
         }
     }
 
-    private int hashProbe(K key, int i) {
+    private int hashFunc(K key, int i) {
         int hashValue = key.hashCode();
         int hashIndex = ((hashValue + i) & 0x7fffffff) % array.length;
         return hashIndex;
+    }
+
+    public V get(K key) throws IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("Key value cannot be null.");
+        }
+        int i = 0;
+        int hashIndex = hashFunc(key, i);
+        while (i < array.length - 1 && array[hashIndex] != null) {
+            if (array[hashIndex].getKey() == key) {
+                return array[hashIndex].getValue();
+            }
+            ++i;
+            if (i < array.length - 1) {
+                hashIndex = hashFunc(key, i);
+            }
+        }
+        return null;
+    }
+
+    public V remove(K key) throws IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("Key value cannot be null.");
+        }
+        int i = 0;
+        int hashIndex = hashFunc(key, i);
+        while (i < array.length - 1 && array[hashIndex] != null) {
+            if (array[hashIndex].getKey() == key) {
+                array[hashIndex].setRemoved();
+                return array[hashIndex].getValue();
+            }
+            ++i;
+            if (i < array.length - 1) {
+                hashIndex = hashFunc(key, i);
+            }
+        }
+        return null;
     }
 }
