@@ -23,11 +23,11 @@ public class Pair<K extends Comparable<K>,V> {
 		return removed;
 	}
 
-	public void setRemoved() {
-		removed = true;
-	}
-
     public void setValue(V value) {
 		this.value = value;
     }
+
+	public void setRemoved(boolean b) {
+		removed = b;
+	}
 }
