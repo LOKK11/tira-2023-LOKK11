@@ -7,9 +7,12 @@ import oy.interact.tira.util.TIRAKeyedContainer;
 
 public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedContainer<K,V> {
     
-    private Pair<K,V>[] array;
+    
     private int size = 0;
-    private final int DEFAULT_SIZE = 20;
+    private final int DEFAULT_SIZE = 100;
+    private final double DEFAULT_MULTIPLIER = 0.7;
+    @SuppressWarnings("unchecked")
+    private Pair<K,V>[] array = new Pair[DEFAULT_SIZE];
 
     @Override
     public void add(K key, V value) throws OutOfMemoryError, IllegalArgumentException {
@@ -20,10 +23,8 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
             for (int i = 0; i < array.length - 1; ++i) {
                 int hashIndex = hashFunc(key, i);
                 if (array[hashIndex] == null) {
-                    // Found an empty slot or a slot marked as removed, insert the pair
                     array[hashIndex] = new Pair<>(key, value);
                     ++size;
-                    return;
                 } else if (array[hashIndex].getKey().equals(key)) {
                     // Key already exists, update the value
                     if (array[hashIndex].isRemoved()) {
@@ -31,12 +32,30 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
                         ++size;    
                     }
                     array[hashIndex].setValue(value);
-                    return;
                 } 
+                if (size >= array.length * DEFAULT_MULTIPLIER) {
+                    reallocate(capacity());
+                }
             }
             throw new IndexOutOfBoundsException("Index of hash went over the size of the array.");
         } catch (OutOfMemoryError outOfMemoryError) {
             throw new OutOfMemoryError("Memory ran out while adding an element.");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void reallocate(int size) throws OutOfMemoryError {
+        try {
+            Pair<K,V>[] tempArray = array;
+            array = new Pair[size * 2];
+            this.size = 0;
+            for (int i = 0; i < tempArray.length; ++i) {
+                if (tempArray[i] != null) {
+                    add(tempArray[i].getKey(), tempArray[i].getValue());
+                }
+            }
+        } catch (OutOfMemoryError e) {
+            throw new OutOfMemoryError("System ran out of memory durin reallocation");
         }
     }
 
@@ -135,7 +154,20 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Pair<K,V> [] toArray() throws Exception {
-        return array;
+        try {
+            Pair<K,V>[] tempArray = new Pair[size];
+            int j = 0;
+            for (int i = 0; i < array.length && j < tempArray.length; ++i) {
+                if (array[i] != null && !array[i].isRemoved()) {
+                    tempArray[j] = array[i];
+                    ++j;
+                }
+            }
+            return tempArray;
+        } catch (Exception e) {
+            throw new Exception("Something went wrong during making of the array");
+        }
     }
 }
