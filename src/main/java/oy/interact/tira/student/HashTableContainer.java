@@ -9,8 +9,12 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     
     
     private int size = 0;
-    private final int DEFAULT_SIZE = 100;
+    private final int DEFAULT_SIZE = 4194304; // 2^22
     private final double DEFAULT_MULTIPLIER = 0.7;
+    private final int REALLOCATION_MULTIPLIER = 8;
+    private boolean ensured = false;
+    public static int collisions = 0;
+
     @SuppressWarnings("unchecked")
     private Pair<K,V>[] array = new Pair[DEFAULT_SIZE];
 
@@ -20,11 +24,13 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
             throw new IllegalArgumentException("Key and value must not be null.");
         }
         try {
+            boolean collided = false;
             for (int i = 0; i < array.length - 1; ++i) {
                 int hashIndex = hashFunc(key, i);
                 if (array[hashIndex] == null) {
-                    array[hashIndex] = new Pair<>(key, value);
+                    array[hashIndex] = new Pair<K,V>(key, value);
                     ++size;
+                    break;
                 } else if (array[hashIndex].getKey().equals(key)) {
                     // Key already exists, update the value
                     if (array[hashIndex].isRemoved()) {
@@ -32,25 +38,33 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
                         ++size;    
                     }
                     array[hashIndex].setValue(value);
+                    break;
                 } 
-                if (size >= array.length * DEFAULT_MULTIPLIER) {
-                    reallocate(capacity());
-                }
+                collided = true;
             }
-            throw new IndexOutOfBoundsException("Index of hash went over the size of the array.");
+            if (size >= array.length * DEFAULT_MULTIPLIER && !ensured) {
+                reallocate(capacity());
+            }
+            if (collided) {
+                ++collisions;
+            }
         } catch (OutOfMemoryError outOfMemoryError) {
             throw new OutOfMemoryError("Memory ran out while adding an element.");
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            throw new IndexOutOfBoundsException("Index went out of bounds");
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void reallocate(int size) throws OutOfMemoryError {
+    private void reallocate(int capacity) throws OutOfMemoryError {
         try {
+            int tempSize = size;
             Pair<K,V>[] tempArray = array;
-            array = new Pair[size * 2];
-            this.size = 0;
-            for (int i = 0; i < tempArray.length; ++i) {
-                if (tempArray[i] != null) {
+            array = new Pair[capacity * REALLOCATION_MULTIPLIER];
+            size = 0;
+            collisions = 0;
+            for (int i = 0; size < tempSize; ++i) {
+                if (tempArray[i] != null && !tempArray[i].isRemoved()) {
                     add(tempArray[i].getKey(), tempArray[i].getValue());
                 }
             }
@@ -61,8 +75,8 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
 
     private int hashFunc(K key, int i) {
         int hashValue = key.hashCode();
-        int hashIndex = ((hashValue + i) & 0x7fffffff) % array.length;
-        return hashIndex;
+        int hashIndex = (hashValue + i) % 4194023; // Large prime number under 2^22
+        return (hashIndex < 0) ? (hashIndex + array.length) : hashIndex;
     }
 
     @Override
@@ -73,7 +87,7 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
         int i = 0;
         int hashIndex = hashFunc(key, i);
         while (i < array.length - 1 && array[hashIndex] != null) {
-            if (array[hashIndex].getKey().equals(key)) {
+            if (array[hashIndex].getKey().equals(key) && !array[hashIndex].isRemoved()) {
                 return array[hashIndex].getValue();
             }
             ++i;
@@ -108,8 +122,10 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     @Override
     public V find(Predicate<V> searcher) {
         for (int i = 0; i < array.length; ++i) {
-            if (searcher.test(array[i].getValue())) {
-                return array[i].getValue();
+            if (array[i] != null && !array[i].isRemoved()) {
+                if (searcher.test(array[i].getValue())) {
+                    return array[i].getValue();
+                }                
             }
         }
         return null;
@@ -132,6 +148,7 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
             throw new IllegalArgumentException("Capacity cannot be less than current size of the table");
         }
         try {
+            ensured = true;
             Pair<K,V>[] tempArray = array;
             array = new Pair[capacity];
             for (int i = 0; i < array.length; ++i) {
@@ -139,7 +156,6 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
                     add(tempArray[i].getKey(), tempArray[i].getValue());
                 }
             }
-            
 
         } catch (OutOfMemoryError e) {
             throw new OutOfMemoryError("System ran out of memory during allocation");
@@ -151,6 +167,7 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     public void clear() {
         array = new Pair[DEFAULT_SIZE];
         size = 0;
+        ensured = false;
     }
 
     @Override

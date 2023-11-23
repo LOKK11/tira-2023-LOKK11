@@ -311,4 +311,17 @@ Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja g
 
 ## 08-TASK
 
+Ensimmäinen HashTablePerformanceTest lisääminen aiheutti seuraavat määrät törmäyksiä
+Collisions 2		100
+Collisions 48		1000
+Collisions 1251		5000
+Collisions 473		10000
+Collisions 12572	50000
+Collisions 4965		100000
+Collisions 50267	1000000
+Collisions 199386	2000000
+
+Which resulted in following add times.
+![bst_graph](hashtable_addtime.png)
+
 ## 09-TASK
