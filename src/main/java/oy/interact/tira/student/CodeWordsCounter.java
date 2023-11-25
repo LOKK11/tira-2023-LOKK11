@@ -8,6 +8,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Comparator;
 
 import oy.interact.tira.factories.HashTableFactory;
 import oy.interact.tira.util.Pair;
@@ -75,7 +76,6 @@ public class CodeWordsCounter {
 		System.out.println("File: " + file.getAbsolutePath());
 		long start = System.currentTimeMillis();
 		for (int index = 0; index < content.length(); index++) {
-			// STUDENTS: TODO: Implement this pseudocode to fill the hash table with unique word counts
 			// from the source code file.
 			// 1. Get a code point at the index from content.
 			// 2. If the code point is a letter character...
@@ -91,7 +91,28 @@ public class CodeWordsCounter {
 			//             2.2.5.1 Add the word to hashtable with count increased by one
 			//                     (Remember that adding the same key to hashtable must update the value already in hashtable).
 			//       2.3 Reset the codeWordIndex to zero so next new word will start filling the wordChars array from the start.
-
+			char character = content.charAt(index);
+			if ((character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z')) {
+				wordChars[codeWordIndex] = character;
+				++codeWordIndex;
+			} else {
+				if (wordChars.length >= 2) {
+					StringBuilder str = new StringBuilder("");
+					for (int i = 0; i <= codeWordIndex; ++i) {
+						if (wordChars[i] >= 'A' && wordChars[i] <= 'Z') {
+							wordChars[i] += 32; // Adding 32 makes a Uppercase to Lowercase.
+						}
+						str.append((char)wordChars[i]);
+					}
+					String word = str.toString();
+					if (codeWords.get(word) == null) {
+						codeWords.add(word, 1);
+					} else {
+						codeWords.add(word, codeWords.get(word) + 1);
+					}
+				}
+				codeWordIndex = 0;
+			}
 		}
 		// ^^ STUDENTS: your implementation after the commens.
 		cumulativeTimeInMilliseconds += System.currentTimeMillis() - start;
@@ -104,7 +125,7 @@ public class CodeWordsCounter {
 			result[0] = new Pair<>("Hashtable not implemented yet", 0);
 			return result;
 		}
-		// STUDENTS: TODO: Implement this pseudocode to get the top words sorted by frequency of use from hash table.
+		// Implement this pseudocode to get the top words sorted by frequency of use from hash table.
 		// 1. Get, from the hash table, pairs of all words and word counts from hash table to an array.
 		// 2. Use your fast sort algorithm to sort the array of pairs by word count, descending (!) order,
 		//    so that the word that is most frequent, is the first in the array.
@@ -113,7 +134,19 @@ public class CodeWordsCounter {
 		//        Let's say the resulting new array size is n.
 		// 4. Put the first n items from the array of all pairs to this result array of size n.
 		// 5. Return the results array to caller.
-		return null; // TODO: return the array of codeword/count pairs.
+		Pair<String,Integer>[] array = codeWords.toArray();
+		Algorithms.fastSort(array, Comparator.comparing(Pair::getKey));
+		Algorithms.reverse(array);
+		Pair<String, Integer>[] resultArray;
+		if (topCount <= array.length) {
+			resultArray = new Pair[topCount];
+		} else {
+			resultArray = new Pair[array.length];
+		}
+		for (int i = 0; i < resultArray.length; ++i) {
+			resultArray[i] = array[i];
+		}
+		return resultArray;
 	}
 
 }

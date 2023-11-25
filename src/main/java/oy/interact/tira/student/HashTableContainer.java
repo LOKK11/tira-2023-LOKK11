@@ -9,11 +9,12 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     
     
     private int size = 0;
-    private final int DEFAULT_SIZE = 4194304; // 2^22
+    private final int DEFAULT_SIZE = 64;
     private final double DEFAULT_MULTIPLIER = 0.7;
     private final int REALLOCATION_MULTIPLIER = 2;
     private boolean ensured = false;
     public static int collisions = 0;
+
 
     @SuppressWarnings("unchecked")
     private Pair<K,V>[] array = new Pair[DEFAULT_SIZE];
@@ -24,7 +25,6 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
             throw new IllegalArgumentException("Key and value must not be null.");
         }
         try {
-            boolean collided = false;
             for (int i = 0; i < array.length - 1; ++i) {
                 int hashIndex = hashFunc(key, i);
                 if (array[hashIndex] == null) {
@@ -40,13 +40,10 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
                     array[hashIndex].setValue(value);
                     break;
                 } 
-                collided = true;
+                ++collisions;
             }
             if (size >= array.length * DEFAULT_MULTIPLIER && !ensured) {
                 reallocate(capacity());
-            }
-            if (collided) {
-                ++collisions;
             }
         } catch (OutOfMemoryError outOfMemoryError) {
             throw new OutOfMemoryError("Memory ran out while adding an element.");
