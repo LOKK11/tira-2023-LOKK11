@@ -209,14 +209,14 @@ public class Coder implements Comparable<Coder> {
 	 */
 	@Override
 	public int hashCode() {
-        int hashCode = 7;
+        long hashCode = 7L;
 
         // Custom hash function based on the characters of the UUID string
         for (int i = 0; i < id.length(); i++) {
             hashCode = 31 * hashCode + id.charAt(i);
         }
 
-        return hashCode;
+        return (int) hashCode;
     }
 	
 }

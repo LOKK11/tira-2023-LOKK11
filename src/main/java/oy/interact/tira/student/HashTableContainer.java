@@ -11,7 +11,7 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     private int size = 0;
     private final int DEFAULT_SIZE = 4194304; // 2^22
     private final double DEFAULT_MULTIPLIER = 0.7;
-    private final int REALLOCATION_MULTIPLIER = 8;
+    private final int REALLOCATION_MULTIPLIER = 2;
     private boolean ensured = false;
     public static int collisions = 0;
 
@@ -75,8 +75,8 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
 
     private int hashFunc(K key, int i) {
         int hashValue = key.hashCode();
-        int hashIndex = (hashValue + i) % 4194023; // Large prime number under 2^22
-        return (hashIndex < 0) ? (hashIndex + array.length) : hashIndex;
+        int hashIndex = ((hashValue + i) & 0x7FFFFFFF) % array.length;
+        return hashIndex;
     }
 
     @Override
