@@ -455,4 +455,6 @@ equals          	83
 
 Laskemisessa kesti alle 100ms.
 
+Suoritin lisätehtävänä myös poistofunktion.
+
 ## 09-TASK
