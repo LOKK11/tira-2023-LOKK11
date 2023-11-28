@@ -76,7 +76,7 @@ public class HashTablePerformanceTests {
 
 	@Test
 	@Order(1)
-	// @Timeout(value = 600, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+	// @Timeout(value = 60, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
 	void handleReadTestFilesWithHashTable() {
 		if (null != writer) {
 			try {
@@ -102,7 +102,7 @@ public class HashTablePerformanceTests {
 					// Also test if all coders are in the hashtable
 					assertEquals(coders.length, hashTable.size(), "Test array size and hashtable size must be the same");
 					System.out.format(" Step 3/6: Adding to HashTable from Coders array it took %d ms%n", duration);
-					System.out.format("Collisions %s%n", HashTableContainer.collisions);
+					System.out.format(" Collisions %d%n", HashTableContainer.collisions);
 					HashTableContainer.collisions = 0;
 
 					writer.append(Long.toString(hashTable.size()));
@@ -121,7 +121,7 @@ public class HashTablePerformanceTests {
 					}
 					end = System.currentTimeMillis();
 					long findDuration = end - start;
-					System.out.format(" Step 6/6: Searching hash table took %d ms%n", duration);
+					System.out.format(" Step 6/6: Searching hash table took %d ms%n", findDuration);
 
 					int codersLength = coders.length;
 					coders = null;

@@ -311,17 +311,148 @@ Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja g
 
 ## 08-TASK
 
-Ensimmäinen HashTablePerformanceTest lisääminen aiheutti seuraavat määrät törmäyksiä
-Collisions 2		100
-Collisions 48		1000
-Collisions 1251		5000
-Collisions 473		10000
-Collisions 12572	50000
-Collisions 4965		100000
-Collisions 50267	1000000
-Collisions 199386	2000000
+Hajautustaulun testeissä kesti yhteensä 86 sekuntia.
 
-Which resulted in following add times.
-![bst_graph](hashtable_addtime.png)
+Avainarvojen törmäysten kokonaismäärä eri tiedostoilla.
+Törmäykset		Elementit tiedostossa
+32				100
+514				1000
+3916			5000
+7878			10000
+15759			50000
+30407			100000
+456348			1000000
+910906			2000000
+
+Kerätty data hajautustaulujen testeistä.
+![HashTableData](HashTableData.png)
+
+Graafit datasta
+![HashTableGraphs](HashTableGraphs.png)
+
+Aikakompleksisuus hajautustauluun lisäämiselle, etsimiselle ja toArraylle on O(n). Lisäksi taulukon lajittelun aikakompleksisuus on O(nlog(n)). Tästä johtuu, että kaikkien datojen graafit ovat suurin piirtein lineaarisia. Isompiin hajautustauluihin lisääminen kesti hieman kauemmin, mikä johtuu uuden muistitilan allokoinnista, jonka aikakompleksiuus on O(n).
+
+Kun verrataan saatua dataa task-7:n hakupuun dataan, huomataan, että lisääminen molempiin on suurin piirtein yhtä nopeaa. Hajautustaulu oli vain vähän nopeampi. Hakupuuhun lisäämisen aikakompleksisuus on O(log(n)) ja hajautustauluun lisäämisen O(1). Mutta koska hajautustauluun pitää välillä allokoida lisämuistia, ei siihen lisääminen ole paljon hakupuuhun lisäämistä nopeampaa.
+
+Hajautustaulusta hakeminen sen sijaan on hakupuusta hakemista nopeampaa. Hakujen aikakompleksisuudet ovat molemille samat kuin lisäämisellekkin, mutta hakemisessa ei tarvi allokoida lisämuistia, joten hajautustaulu on tehokkaampi elementtien hakemisessa.
+
+Lisäksi hajautustaulusta poistaminen on nopeampaa kuin hakupuusta samasta syystä kuin hakeminenkin.
+
+Hakupuun muuttaminen järjestetyksi taulukoksi on nopeampaa, koska se on valmiiksi järjestyksessä eikä tarvi kuin suorittaa toArray, jonka kompleksisuus on O(n). Hajautustaulu sen sijaan muutetaan ensin taulukoksi O(n) jonka jälkeen se vielä järjestetään oikeaan järjestykseen O(n*log(n)). Eli koko prosessin aikakompleksisuus on O(n*log(n)).
+
+Hajautustauluja käytetään yleisesti enemmän kuin hakupuita, koska niiden kyky käsitellä suuria tiedostoja on usein parempi. Hakupuita käytetään kuitenkin joskus totetutksissa, joissa tiedostokoot eivät ole suuria, tai joissa elementtien pitäminen järjestyksessä on tärkeää. Hakupuut käyttävät pienillä tiedostoilla vähemmän ylimääräistä muistia, kuin hajautustaulut.
+
+Kerätty data ja graafit SimpleKeyedTable testeistä
+![SimpleKeyedTableData](SimpleKeyedContainerData.png)
+
+Huomataan, että hitaaseen taulukkototeutukseen lisääminen on nopeaa, koska elementti lisätään aina seuraavaan tyhjään tilaan taulukossa. Taulukosta etsiminen sen sijaan on erittäin hidasta. 100 000 elementin etsimiseen meni yli 2 minuuttia ja 1 000 000 elementin etsimiseen oli kulunut jo puoli tuntia, kunnes päätin sulkea testin. Taulukosta n elementin etsimisen aikakompleksisuus on O(n^2), joten etsimiseen tarvittava aika kasvaa eksponentiaalisesti taulukon koon kasvaessa.
+
+
+CodeWordCounter laski TiRan kansiosta 100 yleisintä sanaa näin.
+```	
+Sanat				Määrä
+the       	   		1004
+import         		729
+int     	    	562
+array         		534
+new         		486
+string         		486
+if         			481
+pubic         		457
+coder         		447
+return         		431
+system         		401
+to         			377
+test         		365
+index         		354
+not         		330
+null         		327
+in         			304
+size         		299
+static         		294
+tira         		284
+out         		274
+oy         			271
+java         		269
+interact        	269
+for         		255
+graph         		250
+void         		246
+private         	240
+of         			236
+comparator      	231
+this         		227
+org         		226
+is         			222
+vertex         		218
+from         		208
+api         		207
+jupiter         	206
+junit         		206
+coders         		202
+must         		202
+be         			201
+value         		200
+start         		189
+util         		188
+assertequals    	182
+and         		180
+queue         		180
+testgraph       	177
+integer         	173
+element         	166
+append         		165
+length         		161
+println         	158
+override        	154
+add         		154
+tostring        	153
+container       	150
+count         		150
+class         		148
+file         		148
+should         		147
+stack         		147
+edge         		134
+currenttimemillis   133
+key         		131
+order         		130
+writer         		130
+throw         		128
+testarray         	122
+final         		122
+with        	 	122
+timeout         	121
+format         		120
+list         		119
+capacity         	112
+bst         		106
+threadmode         	106
+json         		105
+assertdoesnotthrow 	105
+throws         		104
+long         		103
+first         		103
+get         		102
+else         		102
+number         		102
+search         		102
+queuetotest        	100
+assertions          99
+it          		97
+pair          		97
+student          	97
+stacktotest         96
+empty          		95
+node          		93
+that          		91
+package          	91
+displayname         91
+result          	88
+duration          	87
+equals          	83
+```
+
+Laskemisessa kesti alle 100ms.
 
 ## 09-TASK

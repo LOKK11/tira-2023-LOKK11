@@ -96,9 +96,9 @@ public class CodeWordsCounter {
 				wordChars[codeWordIndex] = character;
 				++codeWordIndex;
 			} else {
-				if (wordChars.length >= 2) {
+				if (codeWordIndex >= 2) {
 					StringBuilder str = new StringBuilder("");
-					for (int i = 0; i <= codeWordIndex; ++i) {
+					for (int i = 0; i < codeWordIndex; ++i) {
 						if (wordChars[i] >= 'A' && wordChars[i] <= 'Z') {
 							wordChars[i] += 32; // Adding 32 makes a Uppercase to Lowercase.
 						}
@@ -135,7 +135,7 @@ public class CodeWordsCounter {
 		// 4. Put the first n items from the array of all pairs to this result array of size n.
 		// 5. Return the results array to caller.
 		Pair<String,Integer>[] array = codeWords.toArray();
-		Algorithms.fastSort(array, Comparator.comparing(Pair::getKey));
+		Algorithms.fastSort(array, Comparator.comparing(Pair::getValue));
 		Algorithms.reverse(array);
 		Pair<String, Integer>[] resultArray;
 		if (topCount <= array.length) {

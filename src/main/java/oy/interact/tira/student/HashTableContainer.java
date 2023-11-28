@@ -9,10 +9,9 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     
     
     private int size = 0;
-    private final int DEFAULT_SIZE = 64;
-    private final double DEFAULT_MULTIPLIER = 0.7;
+    private final int DEFAULT_SIZE = 32;
+    private final double DEFAULT_THRESHOLD = 0.7;
     private final int REALLOCATION_MULTIPLIER = 2;
-    private boolean ensured = false;
     public static int collisions = 0;
 
 
@@ -42,7 +41,7 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
                 } 
                 ++collisions;
             }
-            if (size >= array.length * DEFAULT_MULTIPLIER && !ensured) {
+            if (size >= array.length * DEFAULT_THRESHOLD) {
                 reallocate(capacity());
             }
         } catch (OutOfMemoryError outOfMemoryError) {
@@ -145,7 +144,6 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
             throw new IllegalArgumentException("Capacity cannot be less than current size of the table");
         }
         try {
-            ensured = true;
             Pair<K,V>[] tempArray = array;
             array = new Pair[capacity];
             for (int i = 0; i < array.length; ++i) {
@@ -164,7 +162,6 @@ public class HashTableContainer<K extends Comparable<K>,V> implements TIRAKeyedC
     public void clear() {
         array = new Pair[DEFAULT_SIZE];
         size = 0;
-        ensured = false;
     }
 
     @Override
