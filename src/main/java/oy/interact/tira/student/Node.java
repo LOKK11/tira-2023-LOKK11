@@ -1,5 +1,6 @@
 package oy.interact.tira.student;
 
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 public class Node<K extends Comparable<K>, V> {
@@ -7,30 +8,35 @@ public class Node<K extends Comparable<K>, V> {
     private V value;
     private Node<K,V> left;
     private Node<K,V> right;
+    private Node<K,V> nextLinkedNode;
+    private Node<K,V> previousLinkedNode;
     private int leftChildren;
     private int rightChildren;
+    
     
     public Node(K key, V value) {
         this.key = key;
         this.value = value;
         left = null;
         right = null;
+        nextLinkedNode = null;
+        previousLinkedNode = null;
         leftChildren = 0;
         rightChildren = 0;
     }
 
-    public V get(K key) {
-        if (key.compareTo(this.key) < 0) {
+    public V get(K key, Comparator<K> comparator) {
+        if (comparator.compare(key, this.key) < 0) {
             if (left == null) {
                 return null;
             } else {
-                return left.get(key);
+                return left.get(key, comparator);
             } 
-        } else if (key.compareTo(this.key) > 0) {
+        } else if (comparator.compare(key, this.key) > 0) {
             if (right == null) {
                 return null;
             } else {
-                 return right.get(key);
+                 return right.get(key, comparator);
             }
         } else {
             return value;
@@ -56,22 +62,22 @@ public class Node<K extends Comparable<K>, V> {
         return null;
     }
 
-    public V remove(Node<K,V> node, K key, V value) {
-        if (this.key.compareTo(key) < 0) {
+    public V remove(Node<K,V> node, K key, V value, Comparator<K> comparator) {
+        if (comparator.compare(key, this.key) < 0) {
             if (left == null) {
                 return null;
             } else {
-                value = left.remove(left, key, value);
+                value = left.remove(left, key, value, comparator);
                 if (value != null) {
                     --leftChildren;
                 }
                 return value;
             } 
-        } else if (this.key.compareTo(key) > 0) {
+        } else if (comparator.compare(key, this.key) > 0) {
             if (right == null) {
                 return null;
             } else {
-                value = right.remove(right, key, value);
+                value = right.remove(right, key, value, comparator);
                 if (value != null) {
                     --rightChildren;
                 }
@@ -86,7 +92,7 @@ public class Node<K extends Comparable<K>, V> {
                 this.value = min.getValue();
                 this.key = min.getKey();
                 --rightChildren;
-                right.remove(right, this.key, value);
+                right.remove(right, this.key, value, comparator);
             } else if (right != null) {
                 --rightChildren;
                 node = right;
@@ -152,5 +158,21 @@ public class Node<K extends Comparable<K>, V> {
 
     public void setKey(K key) {
         this.key = key;
+    }
+
+    public void setNextLinkedNode(Node<K,V> node) {
+        nextLinkedNode = node;
+    }
+
+    public void setPreviousLinkedNode(Node<K,V> node) {
+        previousLinkedNode = node;
+    }
+
+    public Node<K,V> getNextLinkedNode() {
+        return nextLinkedNode;
+    }
+
+    public Node<K,V> getPreviousLinkedNode() {
+        return previousLinkedNode;
     }
 }

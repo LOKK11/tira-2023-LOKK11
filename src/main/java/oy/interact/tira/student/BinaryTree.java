@@ -46,7 +46,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
 
     private boolean addRecursion(Node<K,V> newNode, Node<K,V> node) {
         if (!newNode.getValue().equals(node.getValue())) {    
-            if (newNode.getKey().compareTo(node.getKey()) < 0) {
+            if (comparator.compare(newNode.getKey(), node.getKey()) < 0) {
                 ++depth;
                 if (node.getLeft() == null) {
                     node.addLeftChild();
@@ -59,7 +59,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
                     }
                     return false;
                 }
-            } else if (newNode.getKey().compareTo(node.getKey()) > 0) {
+            } else if (comparator.compare(newNode.getKey(), node.getKey()) > 0) {
                 ++depth;
                 if (node.getRight() == null) {
                     node.addRightChild();
@@ -73,13 +73,22 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
                     return false;
                 }
             } else {
-                node.setValue(node.getValue());
-                return false;
+                addNodeToLinkedList(node, newNode);
+                return true;
             }
         } else {
             node.setValue(newNode.getValue());
             node.setKey(newNode.getKey());
             return false;
+        }
+    }
+
+    private void addNodeToLinkedList(Node<K,V> node, Node<K,V> newNode) {
+        if (node.getNextLinkedNode() == null) {
+            node.setNextLinkedNode(newNode);
+            newNode.setPreviousLinkedNode(node);
+        } else {
+            addNodeToLinkedList(node.getNextLinkedNode(), newNode);
         }
     }
 
@@ -91,7 +100,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (root == null) {
             return null;
         } else {
-            return root.get(key);
+            return root.get(key, comparator);
         }
     }
 
@@ -103,7 +112,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         if (root == null) {
             return null;
         } else {
-            V tempValue = root.remove(root, key, null);
+            V tempValue = root.remove(root, key, null, comparator);
             if (tempValue != null) {
                 --size;
             }
@@ -165,8 +174,19 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
         }
         Pair<K,V> pair = new Pair<>(node.getKey(), node.getValue());
         addToArray(pair);
+        if (node.getNextLinkedNode() != null) {
+            makePairFromNextNode(node.getNextLinkedNode());
+        }
         if (node.getRight() != null) {
             makeArray(node.getRight());
+        }
+    }
+
+    private void makePairFromNextNode(Node<K,V> node) {
+        Pair<K,V> pair = new Pair<>(node.getKey(), node.getValue());
+        addToArray(pair);
+        if (node.getNextLinkedNode() != null) {
+            makePairFromNextNode(node);
         }
     }
 
@@ -237,10 +257,10 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     }
 
     private int indexOfRecursion(K itemKey, Node<K,V> node, int index) {
-        if (itemKey.compareTo(node.getKey()) < 0) {
+        if (comparator.compare(itemKey, node.getKey()) < 0) {
             index -= node.getLeft().getRightChildren() + 1;
             return indexOfRecursion(itemKey, node.getLeft(), index);
-        } else if (itemKey.compareTo(node.getKey()) > 0) {
+        } else if (comparator.compare(itemKey, node.getKey()) > 0) {
             index += node.getRight().getLeftChildren() + 1;
             return indexOfRecursion(itemKey, node.getRight(), index);          
         } else {
