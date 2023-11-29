@@ -313,6 +313,7 @@ Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja g
 
 Hajautustaulun testeissä kesti yhteensä 86 sekuntia.
 
+```
 Avainarvojen törmäysten kokonaismäärä eri tiedostoilla.
 Törmäykset		Elementit tiedostossa
 32				100
@@ -323,7 +324,7 @@ Törmäykset		Elementit tiedostossa
 30407			100000
 456348			1000000
 910906			2000000
-
+```
 Kerätty data hajautustaulujen testeistä.
 ![HashTableData](HashTableData.png)
 
