@@ -311,6 +311,8 @@ Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja g
 
 ## 08-TASK
 
+Tehtävää tehdessä opin, miten hajauttaminen ja tiivistäminen toimii. Opin, miten hajautustaulu toteutetaan open adressing and probing -menetelmällä. Opin, miten reallokoinnin täyttökerroin ja taulukon koko suhteessa elementtien määrään vaikuttavat hajautustaulun tehokkuuteen. Hajautusta voi tehdä tehokkaamman pienentämällä täyttökerrointa tai kasvattamalla allokointikerrointa, mutta tämä taas johtaa kasvavaan muistin tarpeeseen. Kaikista tärkein tekijä tehokkuuden maksimointiin ja muistinkäytön vähentämiseen on hyvät hajautus ja tiivistysfunktiot.
+
 Hajautustaulun testeissä kesti yhteensä 86 sekuntia.
 
 ```
