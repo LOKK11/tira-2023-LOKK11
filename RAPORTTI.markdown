@@ -266,7 +266,7 @@ Toteutin mergesortin jälkeenpäin ja tein sen testin eri koneella, joka on hiem
 
 ## 07-TASK
 
-Tehtävää tehdessä opin paljon Javan rajapintojen toiminnasta. Opin toteuttamaan ja käyttämään BST:tä. Vaikeaa oli saada toArray toimimaan. Helppoa oli rekusrsiivisten algoritmien toteutus.
+Tehtävää tehdessä opin paljon Javan rajapintojen toiminnasta. Opin toteuttamaan ja käyttämään BST:tä. Vaikeaa oli saada toArray sekä remove toimimaan. Helppoa oli rekusrsiivisten algoritmien toteutus.
 
 BST-optimaalinen syvyys on aina log(n). Muutin BSTPerformanceTests testejä niin, että koodareiden lisäämisen jälkeen tulostetaan puun maksimisyvyys ja puun optimaalinen syvyys kullakin solmumäärällä.
  Max depth in bst is 12, optimal depth for 100 nodes is 6
@@ -307,7 +307,7 @@ Get(index) on hieman nopeampi SimpleContainerissa, koska sen aikakompleksisuuslu
 
 Molempien toteutuksien toArray-algoritmin aikakompleksisuusluokka on O(n), joten ne ovat myös graafeissa suunnilleen yhtä nopeat.
 
-Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja getIndex algoritmeissä.
+Ylimääräisinä tehtävinä toteutin Removen, D tavan toteutuksen indexOf ja getIndex algoritmeissä. Toteutin duplikaattien lisäämisen linked list toteutuksella. BinaryTree-luokasta löytyy ylimääräinen metodi removeFromLinkedList, jota en käytä koodissa, mutta joka poistaisi halutun arvon omaavan solmun halutusta linkitetystä listasta.
 
 ## 08-TASK
 

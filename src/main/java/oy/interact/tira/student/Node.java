@@ -3,9 +3,11 @@ package oy.interact.tira.student;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+
 public class Node<K extends Comparable<K>, V> {
     private K key;
     private V value;
+    private Node<K,V> parent;
     private Node<K,V> left;
     private Node<K,V> right;
     private Node<K,V> nextLinkedNode;
@@ -86,29 +88,40 @@ public class Node<K extends Comparable<K>, V> {
         } else {
             V tempValue = this.value;
             if (left == null && right == null) {
-                node = null;
+                if (node.getParent().getRight() == node) {
+                    node.getParent().setRight(null);
+                } else {
+                    node.getParent().setLeft(null);
+                }
             } else if (left != null && right != null) {
                 Node<K,V> min = getMin(right);
                 this.value = min.getValue();
                 this.key = min.getKey();
+                this.nextLinkedNode = min.getNextLinkedNode();
                 --rightChildren;
                 right.remove(right, this.key, value, comparator);
             } else if (right != null) {
-                --rightChildren;
-                node = right;
+                if (node.getParent().getRight() == node) {
+                    node.getParent().setRight(right);
+                } else {
+                    node.getParent().setLeft(right);
+                }
             } else {
-                --leftChildren;
-                node = left;
+                if (node.getParent().getRight() == node) {
+                    node.getParent().setRight(left);
+                } else {
+                    node.getParent().setLeft(left);
+                }
             }
             return tempValue;
         }
     }
 
     private Node<K,V> getMin(Node<K,V> node) {
-        if (left == null) {
+        if (node.getLeft() == null) {
             return node;
         } else {
-            return left.getMin(left);
+            return getMin(node.getLeft());
         }
     }
 
@@ -142,6 +155,14 @@ public class Node<K extends Comparable<K>, V> {
 
     public void setLeft(Node<K,V> node) {
         this.left = node;
+    }
+
+    public void setParent(Node<K,V> node) {
+        parent = node;
+    }
+
+    public Node<K,V> getParent() {
+        return parent;
     }
 
     public void addRightChild() {

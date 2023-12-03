@@ -45,12 +45,13 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
     }
 
     private boolean addRecursion(Node<K,V> newNode, Node<K,V> node) {
-        if (!newNode.getValue().equals(node.getValue())) {    
+        if (checkValue(newNode, node)) {    
             if (comparator.compare(newNode.getKey(), node.getKey()) < 0) {
                 ++depth;
                 if (node.getLeft() == null) {
                     node.addLeftChild();
                     node.setLeft(newNode);
+                    newNode.setParent(node);
                     return true;
                 } else {
                     if (addRecursion(newNode, node.getLeft())) {
@@ -64,6 +65,7 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
                 if (node.getRight() == null) {
                     node.addRightChild();
                     node.setRight(newNode);
+                    newNode.setParent(node);
                     return true;
                 } else {
                     if (addRecursion(newNode, node.getRight())) {
@@ -77,10 +79,53 @@ public class BinaryTree<K extends Comparable<K>, V> implements TIRAKeyedOrderedC
                 return true;
             }
         } else {
-            node.setValue(newNode.getValue());
-            node.setKey(newNode.getKey());
+            if (node.getNextLinkedNode() != null) {
+                replaceToLinkedList(node, newNode);
+                --size;
+            } else {
+                node.setValue(newNode.getValue());
+                node.setKey(newNode.getKey());
+            }
             return false;
         }
+    }
+
+    private void removeFromLinkedList(Node<K,V> node, V value) {
+        if (value.equals(node.getValue())) {
+            if (node.getPreviousLinkedNode() != null) {
+                node.getPreviousLinkedNode().setNextLinkedNode(node.getNextLinkedNode());
+            } else {
+                node.setValue(node.getNextLinkedNode().getValue());
+                removeFromLinkedList(node.getNextLinkedNode(), value);
+                return;
+            }
+            if (node.getNextLinkedNode() != null) {
+                node.getNextLinkedNode().setPreviousLinkedNode(node.getPreviousLinkedNode());
+            }
+            node.setNextLinkedNode(null);
+            node.setPreviousLinkedNode(null);
+        } else {
+            removeFromLinkedList(node.getNextLinkedNode(), value);
+        }
+    }
+
+    private void replaceToLinkedList(Node<K,V> node, Node<K,V> newNode) {
+        if (newNode.getValue().equals(node.getValue())) {
+            node.setValue(newNode.getValue());
+            node.setKey(newNode.getKey());
+        } else {
+            replaceToLinkedList(node.getNextLinkedNode(), newNode);
+        }
+    }
+
+    private boolean checkValue(Node<K,V> newNode, Node<K,V> node) {
+        if (!newNode.getValue().equals(node.getValue())) {
+            if (node.getNextLinkedNode() != null) {
+                return checkValue(newNode, node.getNextLinkedNode());
+            }
+            return true;
+        }
+        return false;
     }
 
     private void addNodeToLinkedList(Node<K,V> node, Node<K,V> newNode) {
