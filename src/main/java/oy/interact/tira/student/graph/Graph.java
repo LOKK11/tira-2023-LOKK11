@@ -7,6 +7,7 @@ import oy.interact.tira.student.graph.Edge.EdgeType;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class Graph<T> {
     * depending on the application requirements.
     */
    public Graph() {
-      // TODO: Student: allocate necessary member variables.
+      edgeList = new Hashtable<Vertex<T>, List<Edge<T>>>();
    }
 
    /**
@@ -58,8 +59,10 @@ public class Graph<T> {
     * @return Returns the created vertex, placed in the graph's edge list.
     */
    public Vertex<T> createVertexFor(T element) {
-      // TODO: Student, implement this.
-      return null;
+      Vertex<T> newVertex = new Vertex<>(element);
+      List<Edge<T>> newList = new ArrayList<>();
+      edgeList.put(newVertex, newList);
+      return newVertex;
    }
 
    /**
@@ -68,8 +71,7 @@ public class Graph<T> {
     * @return A Set with all the vertices of the graph.
     */
    public Set<Vertex<T>> getVertices() {
-      // TODO: Student, implement this.
-      return null;
+      return edgeList.keySet();
    }
 
    /**
@@ -81,7 +83,20 @@ public class Graph<T> {
     * @param weight The weight of the edge.
     */
    public void addEdge(Edge.EdgeType type, Vertex<T> source, Vertex<T> destination, double weight) {
-      // TODO: Student, implement this.
+      if (source == null || destination == null) {
+         throw new IllegalArgumentException("Source and destination must not be null");
+      }
+      Edge<T> newEdge = new Edge<>(source, destination, weight);
+      switch (type) {
+         case DIRECTED:
+            edgeList.get(source).add(newEdge);
+            break;
+
+         case UNDIRECTED:
+            edgeList.get(source).add(newEdge);
+            edgeList.get(destination).add(newEdge.reversed());
+            break;
+      }
    }
 
    /**
@@ -92,7 +107,8 @@ public class Graph<T> {
     * @param weight The weight of the edge.
     */
    public void addDirectedEdge(Vertex<T> source, Vertex<T> destination, double weight) {
-      // TODO: Student, implement this.
+      Edge<T> newEdge = new Edge<>(source, destination, weight);
+      edgeList.get(source).add(newEdge);
    }
 
    /**
@@ -102,8 +118,7 @@ public class Graph<T> {
     * @return Returns the edges of the vertex or null if no edges from the source.
     */
    public List<Edge<T>> getEdges(Vertex<T> source) {
-      // TODO: Student, implement this.
-      return null;
+      return edgeList.get(source);
    }
 
    /**
@@ -115,7 +130,12 @@ public class Graph<T> {
     * @return The vertex containing the node, or null if no vertex contains the element.
     */
    public Vertex<T> getVertexFor(T element) {
-      // TODO: Student, implement this.
+      Vertex<T> vertex = new Vertex<>(element);
+      for (Vertex<T> another : getVertices()) {
+         if (vertex.equals(another)) {
+            return another;
+         }
+      }
       return null;
    }
 
@@ -129,7 +149,29 @@ public class Graph<T> {
     */
    public List<Vertex<T>> breadthFirstSearch(Vertex<T> from, Vertex<T> target) {
       List<Vertex<T>> visited = new ArrayList<>();
-      // TODO: Student, implement this.
+      visited.add(from);
+      int index = 1;
+      if (from == null) {
+         throw new IllegalArgumentException("Parameter from cannot be null");
+      }
+      while (true) {
+         for (Edge<T> edge : getEdges(from)) {
+            if (!visited.contains(edge.getDestination())) {
+               visited.add(edge.getDestination());
+               if (edge.getDestination().equals(target)) {
+                  return visited;
+               }
+               if (getVertices().size() == visited.size()) {
+                  return visited;
+               }
+            }
+         }
+         if (index == visited.size()) {
+            break;
+         }
+         from = visited.get(index);
+         ++index;
+      }
       return visited;
    }
 
