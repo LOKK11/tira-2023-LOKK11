@@ -1,12 +1,15 @@
 package oy.interact.tira.student.graph;
 
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import oy.interact.tira.student.graph.Edge.EdgeType;
 
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -193,7 +196,6 @@ public class Graph<T> {
       Stack<Vertex<T>> stack = new Stack<>();
       boolean broke = false;
       stack.add(from);
-      // TODO: Student, implement this.
       visited.add(from);
       visitList.add(from);
       while (!stack.isEmpty()) {
@@ -228,9 +230,15 @@ public class Graph<T> {
     * @Param toStartFrom Vertex to start investigating from. If null, start from the first vertex.
     * @return Returns non-empty list if the graph is disconnected, otherwise list is empty.
     */
+   @SuppressWarnings("unchecked")
    public List<T> disconnectedVertices(Vertex<T> toStartFrom) {
       List<T> notInVisited = new ArrayList<>();
-      // TODO: Student, implement this.
+      List<Vertex<T>> visited = breadthFirstSearch(toStartFrom, null);
+      Set<Vertex<T>> allVertices = getVertices();
+      allVertices.removeAll(visited);
+      for (Vertex<T> vertex : allVertices) {
+         notInVisited.add((T)vertex);
+      }
       return notInVisited;
    }
 
@@ -242,8 +250,10 @@ public class Graph<T> {
     * @return True if the graph is disconnected.
     */
    public boolean isDisconnected(Vertex<T> toStartFrom) {
-      // TODO: Student, implement this.
-      return false;
+      if (disconnectedVertices(toStartFrom).size() == 0) {
+         return false;
+      }
+      return true;
    }
 
    /**
@@ -261,8 +271,19 @@ public class Graph<T> {
     * @return Returns true if the graph has cycles.
     */
    public boolean hasCycles(EdgeType edgeType, Vertex<T> fromVertex) {
-      // TODO: Student, implement this.
-      return false;
+      int vertexCount = getVertices().size();
+      int edgeCount = 0;
+      for (Entry<Vertex<T>,List<Edge<T>>> entry : edgeList.entrySet()) {
+         edgeCount += entry.getValue().size();
+      }
+      switch (edgeType) {
+         case UNDIRECTED:
+            edgeCount /= 2;
+            break;
+         case DIRECTED:
+            break;
+      }
+      return vertexCount - 1 == edgeCount;
    }
 
    // Dijkstra starts here.
@@ -301,13 +322,19 @@ public class Graph<T> {
     * @param end The vertex to search the shortest path to.
     * @return An object containing information about the result of the search.
     */
+   @SuppressWarnings("unchecked")
    public DijkstraResult<T> shortestPathDijkstra(Vertex<T> start, Vertex<T> end) {
       DijkstraResult<T> result = new DijkstraResult<>();
-      result.pathFound = false;
-      result.path = null;
-      result.steps = 0;
-      result.totalWeigth = 0.0;
-      // TODO: Student, implement this.
+      Map<Vertex<T>, Visit<T>> pathsFromStart = shortestPathsFrom(start);
+      List<Edge<T>> shortestPath = route(end, pathsFromStart);
+      if (shortestPath.size() == 0) {
+         result.path = null;
+      } else {
+         result.path = (List<T>)shortestPath;
+      }
+      result.pathFound = result.path != null;
+      result.steps = shortestPath.size();
+      result.totalWeigth = distance(end, pathsFromStart);
       return result;
    }
 
@@ -325,13 +352,22 @@ public class Graph<T> {
     */
    private List<Edge<T>> route(Vertex<T> toDestination, Map<Vertex<T>, Visit<T>> paths) {
       List<Edge<T>> path = new ArrayList<>();
-      // TODO: Student, implement this.
+      Vertex<T> vertex = toDestination;
+      Visit<T> visit = paths.get(vertex);
+      while (visit.type != Visit.Type.START) {
+         path.add(visit.edge);
+         vertex = visit.edge.getSource();
+         visit = paths.get(vertex);
+      }
       return path;
    }
 
-   private double distance(Vertex<T> toDestination, Map<Vertex<T>, Visit<T>> viaPath) {
+   protected double distance(Vertex<T> toDestination, Map<Vertex<T>, Visit<T>> viaPath) {
       double distance = 0.0;
-      // TODO: Student, implement this.
+      List<Edge<T>> path = route(toDestination, viaPath);
+      for (Edge<T> edge : path) {
+         distance += edge.getWeigth();
+      }
       return distance;
    }
    
@@ -349,7 +385,20 @@ public class Graph<T> {
       Visit<T> visit = new Visit<>();
       visit.type = Visit.Type.START;
       Map<Vertex<T>, Visit<T>> paths = new HashMap<>();
-      // TODO: Student, implement this.
+      paths.put(start, visit);
+      PriorityQueue<Vertex<T>> queue = new PriorityQueue<>(new DistanceComparator<>(this, paths));
+      queue.offer(start);
+      while (!queue.isEmpty()) {
+         Vertex<T> vertex = queue.poll();
+         for (Edge<T> edge : getEdges(vertex)) {
+            double weight = edge.getWeigth();
+            if (!paths.containsKey(edge.getDestination()) || distance(vertex, paths) + weight < distance(edge.getDestination(), paths)) {
+               Visit<T> newVisit = new Visit<>(Visit.Type.EDGE, edge);
+               paths.put(edge.getDestination(), newVisit);
+               queue.offer(edge.getDestination());
+            }
+         }
+      }
       return paths;
    }
 
@@ -376,7 +425,6 @@ public class Graph<T> {
       // TODO: Student, implement this if you want to (optional task).
    }
 
-   // STUDENTS: TODO: Uncomment the code below and use it as a sample on how
    // to interate over vertices and edges in one situation.
    // If you use some other name for your edge list than edgeList, then
    // rename that in the code below! Otherwise you will have compiler errors.
@@ -399,24 +447,22 @@ public class Graph<T> {
     */
    @Override
    public String toString() {
-      // TODO: Student.
-      return ""; // Remove this and uncomment code below when you are ready.
-      // StringBuilder output = new StringBuilder();
-      // for (Map.Entry<Vertex<T>, List<Edge<T>>> entry : edgeList.entrySet()) {
-      //    output.append("[");
-      //    output.append(entry.getKey().toString());
-      //    output.append("] -> [ ");
-      //    int counter = 0;
-      //    int count = entry.getValue().size();
-      //    for (Edge<T> edge : entry.getValue()) {
-      //       output.append(edge.getDestination().toString());
-      //       if (counter < count - 1) {
-      //          output.append(", ");
-      //       }
-      //       counter++;
-      //    }
-      //    output.append(" ]\n");
-      // }
-      // return output.toString();
+      StringBuilder output = new StringBuilder();
+      for (Map.Entry<Vertex<T>, List<Edge<T>>> entry : edgeList.entrySet()) {
+         output.append("[");
+         output.append(entry.getKey().toString());
+         output.append("] -> [ ");
+         int counter = 0;
+         int count = entry.getValue().size();
+         for (Edge<T> edge : entry.getValue()) {
+            output.append(edge.getDestination().toString());
+            if (counter < count - 1) {
+               output.append(", ");
+            }
+            counter++;
+         }
+         output.append(" ]\n");
+      }
+      return output.toString();
    }
 }
