@@ -2,6 +2,7 @@ package oy.interact.tira.student.graph;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import oy.interact.tira.student.graph.Edge.EdgeType;
 
@@ -188,8 +189,32 @@ public class Graph<T> {
     */
    public List<Vertex<T>> depthFirstSearch(Vertex<T> from, Vertex<T> target) {
       List<Vertex<T>> visited = new ArrayList<>();
+      List<Vertex<T>> visitList = new ArrayList<>();
+      Stack<Vertex<T>> stack = new Stack<>();
+      boolean broke = false;
+      stack.add(from);
       // TODO: Student, implement this.
-      return visited;
+      visited.add(from);
+      visitList.add(from);
+      while (!stack.isEmpty()) {
+         Vertex<T> vertex = stack.peek();
+         for (Edge<T> edge : getEdges(vertex)) {
+            Vertex<T> nextVertex = edge.getDestination();
+            if (!visited.contains(nextVertex)) {
+               stack.push(nextVertex);
+               visited.add(nextVertex);
+               visitList.add(nextVertex);
+               broke = true;
+               break;
+            }
+         }
+         if (broke) {
+            broke = false;
+            continue;
+         }
+         stack.pop();
+      }
+      return visitList;
    }
    
    /**
