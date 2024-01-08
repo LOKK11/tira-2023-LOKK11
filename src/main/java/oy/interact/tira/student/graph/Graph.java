@@ -41,6 +41,7 @@ public class Graph<T> {
     * a suitable type of Map, depending on application needs.
     */
    private Map<Vertex<T>, List<Edge<T>>> edgeList = null;
+   private Vertex<T> firstVertex = null;
    
    /**
     * Constructor instantiates a suitable Map data structure
@@ -65,6 +66,9 @@ public class Graph<T> {
    public Vertex<T> createVertexFor(T element) {
       Vertex<T> newVertex = new Vertex<>(element);
       List<Edge<T>> newList = new ArrayList<>();
+      if (edgeList.isEmpty()) {
+         firstVertex = newVertex;
+      }
       edgeList.put(newVertex, newList);
       return newVertex;
    }
@@ -233,6 +237,9 @@ public class Graph<T> {
    @SuppressWarnings("unchecked")
    public List<T> disconnectedVertices(Vertex<T> toStartFrom) {
       List<T> notInVisited = new ArrayList<>();
+      if (toStartFrom == null) {
+         toStartFrom = firstVertex;
+      }
       List<Vertex<T>> visited = breadthFirstSearch(toStartFrom, null);
       Set<Vertex<T>> allVertices = getVertices();
       allVertices.removeAll(visited);
@@ -273,6 +280,9 @@ public class Graph<T> {
    public boolean hasCycles(EdgeType edgeType, Vertex<T> fromVertex) {
       int vertexCount = getVertices().size();
       int edgeCount = 0;
+      if (fromVertex == null) {
+         fromVertex = firstVertex;
+      }
       for (Entry<Vertex<T>,List<Edge<T>>> entry : edgeList.entrySet()) {
          edgeCount += entry.getValue().size();
       }
@@ -283,7 +293,7 @@ public class Graph<T> {
          case DIRECTED:
             break;
       }
-      return vertexCount - 1 == edgeCount;
+      return vertexCount - 1 <= edgeCount;
    }
 
    // Dijkstra starts here.
@@ -330,7 +340,15 @@ public class Graph<T> {
       if (shortestPath.size() == 0) {
          result.path = null;
       } else {
-         result.path = (List<T>)shortestPath;
+         result.path = new ArrayList<>();
+         boolean first = true;
+         for (Edge<T> edge : shortestPath) {
+            if (first) {
+               result.path.add(edge.getSource().getElement());
+            }
+            result.path.add(edge.getDestination().getElement());
+            first = false;
+         }
       }
       result.pathFound = result.path != null;
       result.steps = shortestPath.size();
